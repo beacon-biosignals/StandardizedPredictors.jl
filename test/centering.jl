@@ -3,13 +3,7 @@
     data = (x=collect(1:10),
             y=rand(10) .+ 3,
             z=Symbol.(repeat('a':'e', 2)))
-
-
     
-    @test  isa ContinuousTerm
-    @test concrete_term(term(:y), data) isa ContinuousTerm
-    @test concrete_term(term(:z), data) isa CategoricalTerm
-
     @testset "Automatic centering" begin
         xc = concrete_term(term(:x), data, Center())
         @test xc isa CenteredTerm
