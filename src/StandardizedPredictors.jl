@@ -8,6 +8,7 @@ export
 
 using StatsModels
 using StatsBase
+using Statistics
 
 include("centering.jl")
 
