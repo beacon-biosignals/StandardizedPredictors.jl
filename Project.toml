@@ -1,0 +1,13 @@
+name = "StandardizedPredictors"
+uuid = "5064a6a7-f8c2-40e2-8bdc-797ec6f1ae18"
+authors = ["Dave Kleinschmidt <dave.f.kleinschmidt@gmail.com> and contributors"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
