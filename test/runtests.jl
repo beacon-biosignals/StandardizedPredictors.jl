@@ -2,5 +2,5 @@ using StandardizedPredictors
 using Test
 
 @testset "StandardizedPredictors.jl" begin
-    include("center.jl")
+    include("centering.jl")
 end
