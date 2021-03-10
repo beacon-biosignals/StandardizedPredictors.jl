@@ -1,5 +1,14 @@
 module StandardizedPredictors
 
-# Write your package code here.
+export
+    center,
+    center!,
+    Center,
+    CenteredTerm
+
+using StatsModels
+using StatsBase
+
+include("centering.jl")
 
 end
