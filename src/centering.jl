@@ -139,6 +139,7 @@ StatsModels.concrete_term(t::Term, xs::AbstractArray, c::Center) =
 
 # run-time constructors:
 center(t::ContinuousTerm, c::Center) = CenteredTerm(t, something(c.center, t.mean))
+center(t::ContinuousTerm, c) = CenteredTerm(t, c)
 center(t::ContinuousTerm) = CenteredTerm(t, t.mean)
 center(t::AbstractTerm) = throw(ArgumentError("can only compute center for ContinuousTerm; must provide center value via center(t, c)"))
 
