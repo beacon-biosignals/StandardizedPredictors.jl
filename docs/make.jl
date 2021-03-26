@@ -19,7 +19,7 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/kleinschmidt/StandardizedPredictors.jl",
+    repo="github.com/beacon-biosignals/StandardizedPredictors.jl",
     devbranch="main",
     push_preview=true
 )
