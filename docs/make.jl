@@ -6,11 +6,11 @@ DocMeta.setdocmeta!(StandardizedPredictors, :DocTestSetup, :(using StandardizedP
 makedocs(;
     modules=[StandardizedPredictors],
     authors="Dave Kleinschmidt <dave.f.kleinschmidt@gmail.com> and contributors",
-    repo="https://github.com/kleinschmidt/StandardizedPredictors.jl/blob/{commit}{path}#{line}",
+    repo="https://github.com/beacon-biosignals/StandardizedPredictors.jl/blob/{commit}{path}#{line}",
     sitename="StandardizedPredictors.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://kleinschmidt.github.io/StandardizedPredictors.jl",
+        canonical="https://beacon-biosignals.github.io/StandardizedPredictors.jl",
         assets=String[],
     ),
     pages=[
