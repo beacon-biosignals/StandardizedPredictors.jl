@@ -25,7 +25,7 @@ but by age 20 the median male weights 155 pounds while the median girl weighs
 around 125 pounds.
 
 ```jldoctest centering
-julia> using StandardizedPredictors, DataFrames, GLM
+julia> using StandardizedPredictors, DataFrames, StatsModels, GLM
 
 julia> data = DataFrame(age=[13:20; 13:20], 
                         sex=repeat(["male", "female"], inner=8),
