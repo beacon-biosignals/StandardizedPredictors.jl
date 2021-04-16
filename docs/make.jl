@@ -5,7 +5,7 @@ DocMeta.setdocmeta!(StandardizedPredictors, :DocTestSetup, :(using StandardizedP
 
 makedocs(;
     modules=[StandardizedPredictors],
-    authors="Dave Kleinschmidt <dave.f.kleinschmidt@gmail.com> and contributors",
+    authors="Beacon Biosignals, Inc.",
     repo="https://github.com/beacon-biosignals/StandardizedPredictors.jl/blob/{commit}{path}#{line}",
     sitename="StandardizedPredictors.jl",
     format=Documenter.HTML(;

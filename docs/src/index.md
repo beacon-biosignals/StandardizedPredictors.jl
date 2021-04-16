@@ -16,13 +16,13 @@ formula](https://juliastats.org/StatsModels.jl/stable/formula/).
 
 ## Centering
 
-Let's consider a (slightly) synthetic dataset of weights for boys and girls of
+Let's consider a (slightly) synthetic dataset of weights for adolescents of
 different ages, with predictors `age` (continuous, from 13 to 20) and `sex`, and
 `weight` in pounds.  The weights are based loosely on the medians from the [CDC
 growth charts](https://www.cdc.gov/growthcharts/html_charts/wtage.htm), which
-show that the median boys and girls both start off around 100 pounds at age 13,
-but by age 20 the median male weights 155 pounds while the median girl weighs
-around 125 pounds.
+show that the median male and female both start off around 100 pounds at age 13,
+but by age 20 the median male weighs around 155 pounds while the median female
+weighs around 125 pounds.
 
 ```jldoctest centering
 julia> using StandardizedPredictors, DataFrames, StatsModels, GLM
