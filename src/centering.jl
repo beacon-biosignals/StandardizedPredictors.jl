@@ -149,8 +149,12 @@ function center(t::AbstractTerm, c::Center)
 end
 
 StatsModels.modelcols(t::CenteredTerm, d::NamedTuple) = modelcols(t.term, d) .- t.center
-StatsBase.coefnames(t::CenteredTerm) = "center($(coefnames(t.term)))"
-Base.show(io::IO, t::CenteredTerm) = print(io, "center($(t.term), $(t.center))")
+StatsBase.coefnames(t::CenteredTerm) = "$(coefnames(t.term))(centered: $(t.center))"
+# coef table: "x: centered at 5.5"
+Base.show(io::IO, t::CenteredTerm) = show(io, t.term)
+# regular show: "x"
+Base.show(io::IO, ::MIME"text/plain", t::CenteredTerm) = print(io, "$(t.term)(centered: $(t.center))")
+# long show: "x(centered: 5.5)"
 
 # statsmodels glue code:
 StatsModels.width(t::CenteredTerm) = StatsModels.width(t.term)

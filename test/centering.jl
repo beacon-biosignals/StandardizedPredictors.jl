@@ -68,7 +68,7 @@
                            data.y .- 2,
                            (data.x .- mean(data.x)) .* (data.y .- 2))
 
-        @test coefnames(ff_c.rhs) == ["center(x)", "center(y)", "center(x) & center(y)"]
+        @test coefnames(ff_c.rhs) == ["x(centered: 5.5)", "y(centered: 2)", "x(centered: 5.5) & y(centered: 2)"]
 
         # round-trip schema is empty since needs_schema is false
         sch_2 = schema(ff_c, data)
@@ -77,7 +77,9 @@
 
     @testset "printing" begin
         xc = concrete_term(term(:x), data, Center())
-        @test "$(xc)" == "center(x, 5.5)"
+        @test "$(xc)" == "$(xc.term)"
+        @test string_mime(MIME("text/plain"), xc) == "x(centered: 5.5)"
+        @test coefnames(xc) == "x(centered: 5.5)"
     end
 
 end
