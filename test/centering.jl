@@ -53,6 +53,7 @@
         xc2 = center(x, Center(2))
         xc22 = center(x, 2)
         @test xc2.center == xc22.center == 2
+
     end
 
     @testset "plays nicely with formula" begin
@@ -81,5 +82,24 @@
         @test string_mime(MIME("text/plain"), xc) == "x(centered: 5.5)"
         @test coefnames(xc) == "x(centered: 5.5)"
     end
+
+    @testset "categorical term" begin
+        z = concrete_term(term(:z), data)
+        @test_throws ArgumentError center(z)
+        @test_throws ArgumentError center(z, Center())
+        zc = center(z, Center(0.5))
+        @test modelcols(zc, data) == modelcols(z, data) .- 0.5
+        @test StatsModels.width(zc) == StatsModels.width(z)
+        @test coefnames(zc) == coefnames(z) .* "(centered: 0.5)"
+
+        zc2 = center(z, Center([1 2 3 4]))
+        @test modelcols(zc2, data) == modelcols(z, data) .- [1 2 3 4]
+        @test coefnames(zc2) == coefnames(z) .* "(centered: " .* string.([1, 2, 3, 4]) .* ")"
+    end
+
+    # @testset "utilities" begin
+        
+
+    # end
 
 end
