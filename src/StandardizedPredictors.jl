@@ -4,7 +4,7 @@ export
     center,
     center!,
     Center,
-    CenteredTerm
+    CenteredTerm,
     scale,
     scale!,
     Scale,

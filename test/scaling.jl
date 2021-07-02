@@ -49,31 +49,30 @@
 
         xc = scale(x)
         @test xc isa ScaledTerm
-        @test xc.scale == x.std
+        @test xc.scale == sqrt(x.var)
 
         xc2 = scale(x, Scale(2))
         xc22 = scale(x, 2)
         @test xc2.scale == xc22.scale == 2
 
         @testset "scaling vectors" begin
-            x = collect(1:5)
-            y = x .+ 5.0
-            xc = x ./ 3
-
-            @test scale(x) == xc
-            @test scale(y) == xc
+            x = collect(1:5) # int
+            y = x * 5.0      # float
+            @test scale(x) ==  x ./ std(x)
+            @test scale(y) ==  y ./ std(y)
             @test scale(maximum, x) == (x ./ 5)
             @test all(scale(y, x) .== 5)
 
+            @test scale!(copy(y)) == scale(y)
+            # test mutation
             y2 = copy(y)
-            @test scale!(y2) == xc
-            @test all(y2 .!= y)
-            @test y2 == xc
+            scale!(y2)
+            @test y2 == scale(y)
 
             # this is int on int so you can modify in place
-            @test scale!(maximum, copy(x)) == (x ./ 5)
+            @test scale!(minimum, copy(x)) == x
             # this converts exactly to int, so you can do it in place
-            scale!(std, copy(x)) == scale(std, x)
+            @test scale!([2 4 6]) == scale([2 4 6])
             @test_throws ArgumentError scale!(std, [1, 2])
             @test_throws ArgumentError scale!([1, 2])
             @test_throws MethodError scale!(v -> 1, ["a","b"])
@@ -93,7 +92,7 @@
                            data.y ./ 2,
                            (data.x ./ std(data.x)) .* (data.y ./ 2))
 
-        @test coefnames(ff_c.rhs) == ["x(scaled: 5.5)", "y(scaled: 2)", "x(scaled: 5.5) & y(scaled: 2)"]
+        @test coefnames(ff_c.rhs) == ["x(scaled: 3.0277)", "y(scaled: 2)", "x(scaled: 3.0277) & y(scaled: 2)"]
 
         # round-trip schema is empty since needs_schema is false
         sch_2 = schema(ff_c, data)
@@ -104,8 +103,8 @@
         xc = concrete_term(term(:x), data, Scale())
         @test StatsModels.termsyms(xc) == Set([:x])
         @test "$(xc)" == "$(xc.term)"
-        @test string_mime(MIME("text/plain"), xc) == "x(scaled: 5.5)"
-        @test coefnames(xc) == "x(scaled: 5.5)"
+        @test string_mime(MIME("text/plain"), xc) == "x(scaled: 3.0277)"
+        @test coefnames(xc) == "x(scaled: 3.0277)"
     end
 
     @testset "categorical term" begin
@@ -121,10 +120,4 @@
         @test modelcols(zc2, data) == modelcols(z, data) ./ [1 2 3 4]
         @test coefnames(zc2) == coefnames(z) .* "(scaled: " .* string.([1, 2, 3, 4]) .* ")"
     end
-
-    # @testset "utilities" begin
-
-
-    # end
-
 end
