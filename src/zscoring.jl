@@ -1,7 +1,7 @@
 """
     struct ZScore
 
-Represents a scaling scheme, akin to `StatsModels.AbstractContrasts`.  Pass as
+Represents a z-scoring scheme, akin to `StatsModels.AbstractContrasts`.  Pass as
 value in `Dict` as hints to `schema` (or as `contrasts` kwarg for `fit`).
 
 ## Examples
