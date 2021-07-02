@@ -107,13 +107,17 @@ end
 
 StatsModels.concrete_term(t::Term, xs::AbstractArray, z::ZScore) =
     zscore(StatsModels.concrete_term(t, xs, nothing), z)
+# avoid Type Privateering
+# users will need to explicit import our zscore,
+# but it doesn't mess up the functionality from StatsBase
+zscore(args...; kwargs...) = StatsBase.zscore(args...; kwargs...)
 
 # run-time constructors:
-StatsBase.zscore(t::ContinuousTerm, z::ZScore) = ZScoredTerm(t, something(z.center, t.mean), something(z.scale, sqrt(t.var)))
-StatsBase.zscore(t::ContinuousTerm; center=nothing, scale=nothing) = ZScoredTerm(t, ZScore(center, scale))
-StatsBase.zscore(t::AbstractTerm) = throw(ArgumentError("can only compute z-score for ContinuousTerm; must provide scale value via zscore(t; center, scale)"))
+zscore(t::ContinuousTerm, z::ZScore) = ZScoredTerm(t, something(z.center, t.mean), something(z.scale, sqrt(t.var)))
+zscore(t::ContinuousTerm; center=nothing, scale=nothing) = ZScoredTerm(t, ZScore(center, scale))
+zscore(t::AbstractTerm) = throw(ArgumentError("can only compute z-score for ContinuousTerm; must provide scale value via zscore(t; center, scale)"))
 
-function StatsBase.zscore(t::AbstractTerm, z::ZScore)
+function zscore(t::AbstractTerm, z::ZScore)
     z.scale !== nothing && z.center !== nothing || throw(ArgumentError("xxxcan only compute z-score for ContinuousTerm; must provide scale via zscore(t; center, scale)"))
     ZScoredTerm(t, z.center, z.scale)
 end

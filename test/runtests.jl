@@ -4,6 +4,8 @@ using StatsBase
 using Statistics
 using Test
 
+using StandardizedPredictors: zscore
+
 string_mime(mime, x) = sprint(show, mime, x)
 
 @testset "StandardizedPredictors.jl" begin

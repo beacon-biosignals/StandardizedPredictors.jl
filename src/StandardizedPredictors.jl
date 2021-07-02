@@ -9,8 +9,9 @@ export
     scale!,
     Scale,
     ScaledTerm,
-    zscore,    # from StatsBase
-    zscore!,   # from StatsBase
+    # no explicit export -- avoid Type Piracy the FilePathsBase Way
+    # zscore,
+    # zscore!,
     ZScore,
     ZScoredTerm
 
