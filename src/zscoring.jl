@@ -6,12 +6,12 @@ value in `Dict` as hints to `schema` (or as `contrasts` kwarg for `fit`).
 
 ## Examples
 
-Can specify scale value to use:
+Can specify the center and scale values to use:
 
 ```
-julia> schema((x=collect(1:10), ), Dict(:x => ZScore(5)))
+julia> schema((x=collect(1:10), ), Dict(:x => ZScore(; center=5, scale=3)))
 StatsModels.Schema with 1 entry:
-  x => zscore(x, 5)
+  x => x(centered: 5 scaled: 3)
 ```
 
 Or scale will be automatically computed if left out:
@@ -19,7 +19,7 @@ Or scale will be automatically computed if left out:
 ```
 julia> schema((x=collect(1:10), ), Dict(:x => ZScore()))
 StatsModels.Schema with 1 entry:
-  x => zscore(x, 5.5)
+  x => x(centered: 5.5 scaled: 3.0277)
 ```
 """
 struct ZScore
