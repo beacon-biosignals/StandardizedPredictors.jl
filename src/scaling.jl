@@ -70,7 +70,7 @@ Scale() = Scale(nothing)
 
 
 """
-    struct ScaledTerm{T,C} <: AbstractTerm
+    struct ScaledTerm{T,S} <: AbstractTerm
 
 A lazily scaled term.  A wrapper around an `T<:AbstractTerm` which will
 produce scaled values with `modelcols` by dividing each element by `scale`.
@@ -78,7 +78,7 @@ produce scaled values with `modelcols` by dividing each element by `scale`.
 ## Fields
 
 - `term::T`: The wrapped term.
-- `scale::C`: The scale value which the resulting `modelcols` are divided by.
+- `scale::S`: The scale value which the resulting `modelcols` are divided by.
 
 ## Examples
 
@@ -137,9 +137,9 @@ StatsModels.Schema with 1 entry:
 
 
 """
-struct ScaledTerm{T,C} <: AbstractTerm
+struct ScaledTerm{T,S} <: AbstractTerm
     term::T
-    scale::C
+    scale::S
 end
 
 StatsModels.concrete_term(t::Term, xs::AbstractArray, s::Scale) =
@@ -158,23 +158,19 @@ end
 
 StatsModels.modelcols(t::ScaledTerm, d::NamedTuple) = modelcols(t.term, d) ./ t.scale
 
-_round_scale(v::AbstractArray) = _round_scale.(v)
-_round_scale(x::Integer) = x
-_round_scale(x) = round(x; digits=4)
-
 function StatsBase.coefnames(t::ScaledTerm)
     if StatsModels.width(t.term) == 1
-        return "$(coefnames(t.term))(scaled: $(_round_scale(t.scale)))"
+        return "$(coefnames(t.term))(scaled: $(_round(t.scale)))"
     elseif length(t.scale) > 1
-        return string.(vec(coefnames(t.term)), "(scaled: ", _round_scale.(vec(t.scale)), ")")
+        return string.(vec(coefnames(t.term)), "(scaled: ", _round.(vec(t.scale)), ")")
     else
-        return string.(coefnames(t.term), "(scaled: ", _round_scale(t.scale), ")")
+        return string.(coefnames(t.term), "(scaled: ", _round(t.scale), ")")
     end
 end
 # coef table: "x(scaled: 5.5)"
-Base.show(io::IO, t::ScaledTerm) = print(io, "$(t.term)(scaled: $(_round_scale(t.scale)))")
+Base.show(io::IO, t::ScaledTerm) = print(io, "$(t.term)(scaled: $(_round(t.scale)))")
 # regular show: "x(scaled: 5.5)", used in displaying schema dicts
-Base.show(io::IO, ::MIME"text/plain", t::ScaledTerm) = print(io, "$(t.term)(scaled: $(_round_scale(t.scale)))")
+Base.show(io::IO, ::MIME"text/plain", t::ScaledTerm) = print(io, "$(t.term)(scaled: $(_round(t.scale)))")
 # long show: "x(scaled: 5.5)"
 
 # statsmodels glue code:

@@ -160,17 +160,17 @@ end
 StatsModels.modelcols(t::CenteredTerm, d::NamedTuple) = modelcols(t.term, d) .- t.center
 function StatsBase.coefnames(t::CenteredTerm)
     if StatsModels.width(t.term) == 1
-        return "$(coefnames(t.term))(centered: $(t.center))"
+        return "$(coefnames(t.term))(centered: $(_round(t.center)))"
     elseif length(t.center) > 1
-        return string.(vec(coefnames(t.term)), "(centered: ", vec(t.center), ")")
+        return string.(vec(coefnames(t.term)), "(centered: ", _round.(vec(t.center)), ")")
     else
-        return string.(coefnames(t.term), "(centered: ", t.center, ")")
+        return string.(coefnames(t.term), "(centered: ", _round.(t.center), ")")
     end
 end
 # coef table: "x(centered: 5.5)"
-Base.show(io::IO, t::CenteredTerm) = print(io, "$(t.term)(centered: $(t.center))")
+Base.show(io::IO, t::CenteredTerm) = print(io, "$(t.term)(centered: $(_round(t.center)))")
 # regular show: "x(centered: 5.5)", used in displaying schema dicts
-Base.show(io::IO, ::MIME"text/plain", t::CenteredTerm) = print(io, "$(t.term)(centered: $(t.center))")
+Base.show(io::IO, ::MIME"text/plain", t::CenteredTerm) = print(io, "$(t.term)(centered: $(_round(t.center)))")
 # long show: "x(centered: 5.5)"
 
 # statsmodels glue code:

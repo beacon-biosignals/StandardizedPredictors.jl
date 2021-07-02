@@ -8,13 +8,19 @@ export
     scale,
     scale!,
     Scale,
-    ScaledTerm
+    ScaledTerm,
+    zscore,    # from StatsBase
+    zscore!,   # from StatsBase
+    ZScore,
+    ZScoredTerm
 
 using StatsModels
 using StatsBase
 using Statistics
 
+include("utils.jl")
 include("centering.jl")
 include("scaling.jl")
+include("zscoring.jl")
 
 end

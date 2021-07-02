@@ -9,4 +9,5 @@ string_mime(mime, x) = sprint(show, mime, x)
 @testset "StandardizedPredictors.jl" begin
     include("centering.jl")
     include("scaling.jl")
+    include("zscoring.jl")
 end
