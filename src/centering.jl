@@ -22,10 +22,14 @@ center!(f::Function, x) = center!(x, f(skipmissing(x)))
 function center!(x, y)
     try
         y = convert(eltype(x), y)
+        # verify that we also don't hit problems during substraction
+        # I can't think of any common number type that isn't closed under
+        # subtraction, but maybe somebody has created a PositiveInt type
+        convert(eltype(x), first(x) - y)
     catch e
         if e isa InexactError
             throw(ArgumentError("Subtracting the center $(y) changes the eltype of "*
-                                "the array. Promote to $(typeof(y)) first."))
+                                "the array. Promote to $(typeof(first(x) - y)) first."))
         else
             rethrow(e)
         end
