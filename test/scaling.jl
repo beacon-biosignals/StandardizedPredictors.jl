@@ -117,6 +117,7 @@
         @test coefnames(zc) == coefnames(z) .* "(scaled: 0.5)"
 
         zc2 = scale(z, Scale([1 2 3 4]))
+        @test string_mime(MIME("text/plain"), zc2) == "z(scaled: [1 2 3 4])"
         @test modelcols(zc2, data) == modelcols(z, data) ./ [1 2 3 4]
         @test coefnames(zc2) == coefnames(z) .* "(scaled: " .* string.([1, 2, 3, 4]) .* ")"
     end
