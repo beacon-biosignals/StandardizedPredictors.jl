@@ -3,7 +3,7 @@
     data = (x=collect(1:10),
             y=rand(10) .+ 3,
             z=Symbol.(repeat('a':'e', 2)))
-    
+
     @testset "Automatic centering" begin
         xc = concrete_term(term(:x), data, Center())
         @test xc isa CenteredTerm
@@ -32,6 +32,7 @@
         sch = schema(data, Dict(:x => Center(), :y => Center(2)))
         xc = sch[term(:x)]
         @test xc isa CenteredTerm
+        @test !StatsModels.needs_schema(xc)
         @test xc.center == mean(data.x)
 
         yc = sch[term(:y)]
@@ -54,13 +55,36 @@
         xc22 = center(x, 2)
         @test xc2.center == xc22.center == 2
 
+        @testset "centering vectors" begin
+            x = collect(1:5)
+            y = x .+ 5.0
+            xc = x .- 3
+
+            @test center(x) == xc
+            @test center(y) == xc
+            @test center(maximum, x) == (x .- 5)
+            @test all(center(y, x) .== 5)
+
+            y2 = copy(y)
+            @test center!(y2) == xc
+            @test all(y2 .!= y)
+            @test y2 == xc
+
+            # this is int on int so you can modify in place
+            @test center!(maximum, copy(x)) == (x .- 5)
+            # this converts exactly to int, so you can do it in place
+            center!(mean, copy(x)) == center(mean, x)
+            @test_throws ArgumentError center!(mean, [1, 2])
+            @test_throws ArgumentError center!([1, 2])
+            @test_throws MethodError center!(v -> 1, ["a","b"])
+        end
     end
 
     @testset "plays nicely with formula" begin
         f = @formula(0 ~ x * y)
 
         sch = schema(f, data)
-        
+
         sch_c = schema(f, data, Dict(:x => Center(), :y => Center(2)))
         ff_c = apply_schema(f, sch_c)
 
@@ -78,6 +102,7 @@
 
     @testset "printing" begin
         xc = concrete_term(term(:x), data, Center())
+        @test StatsModels.termsyms(xc) == Set([:x])
         @test "$(xc)" == "$(xc.term)"
         @test string_mime(MIME("text/plain"), xc) == "x(centered: 5.5)"
         @test coefnames(xc) == "x(centered: 5.5)"
@@ -98,7 +123,7 @@
     end
 
     # @testset "utilities" begin
-        
+
 
     # end
 

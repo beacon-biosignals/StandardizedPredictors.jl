@@ -4,12 +4,7 @@ using StatsBase
 using Statistics
 using Test
 
-function string_mime(mime, x)
-    io = IOBuffer()
-    show(io, mime, x)
-    seekstart(io)
-    return read(io, String)
-end
+string_mime(mime, x) = sprint(show, mime, x)
 
 @testset "StandardizedPredictors.jl" begin
     include("centering.jl")
