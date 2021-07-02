@@ -60,7 +60,7 @@ Can specify scale value to use:
 ```
 julia> schema((x=collect(1:10), ), Dict(:x => Scale(5)))
 StatsModels.Schema with 1 entry:
-  x => scale(x, 5)
+  x => x(scaled: 5))
 ```
 
 Or scale will be automatically computed if left out:
@@ -68,7 +68,7 @@ Or scale will be automatically computed if left out:
 ```
 julia> schema((x=collect(1:10), ), Dict(:x => Scale()))
 StatsModels.Schema with 1 entry:
-  x => scale(x, 5.5)
+  x => x(scaled: 3.0277)
 ```
 """
 struct Scale
