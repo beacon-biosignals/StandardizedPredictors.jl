@@ -72,7 +72,7 @@ StatsModels.Schema with 1 entry:
 ```
 """
 struct Scale
-    scale
+    scale::Any
 end
 
 Scale() = Scale(nothing)
@@ -162,7 +162,7 @@ scale(t::AbstractTerm) = throw(ArgumentError("can only compute scale for Continu
 
 function scale(t::AbstractTerm, s::Scale)
     s.scale !== nothing || throw(ArgumentError("can only compute scale for ContinuousTerm; must provide scale via scale(t, s)"))
-    ScaledTerm(t, s.scale)
+    return ScaledTerm(t, s.scale)
 end
 
 StatsModels.modelcols(t::ScaledTerm, d::NamedTuple) = modelcols(t.term, d) ./ t.scale

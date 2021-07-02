@@ -23,8 +23,8 @@ StatsModels.Schema with 1 entry:
 ```
 """
 struct ZScore
-    center
-    scale
+    center::Any
+    scale::Any
 end
 
 ZScore(; center=nothing, scale=nothing) = ZScore(center, scale)
@@ -115,7 +115,7 @@ StatsBase.zscore(t::AbstractTerm) = throw(ArgumentError("can only compute z-scor
 
 function StatsBase.zscore(t::AbstractTerm, z::ZScore)
     z.scale !== nothing && z.center !== nothing || throw(ArgumentError("xxxcan only compute z-score for ContinuousTerm; must provide scale via zscore(t; center, scale)"))
-    ZScoredTerm(t, z.center, z.scale)
+    return ZScoredTerm(t, z.center, z.scale)
 end
 
 StatsModels.modelcols(t::ZScoredTerm, d::NamedTuple) = zscore(modelcols(t.term, d), t.center, t.scale)

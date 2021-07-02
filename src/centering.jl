@@ -63,7 +63,7 @@ StatsModels.Schema with 1 entry:
 ```
 """
 struct Center
-    center
+    center::Any
 end
 
 Center() = Center(nothing)
@@ -154,7 +154,7 @@ center(t::AbstractTerm) = throw(ArgumentError("can only compute center for Conti
 
 function center(t::AbstractTerm, c::Center)
     c.center !== nothing || throw(ArgumentError("can only compute center for ContinuousTerm; must provide center via center(t, c)"))
-    CenteredTerm(t, c.center)
+    return CenteredTerm(t, c.center)
 end
 
 StatsModels.modelcols(t::CenteredTerm, d::NamedTuple) = modelcols(t.term, d) .- t.center
