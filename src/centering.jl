@@ -28,7 +28,7 @@ function center!(x, y)
         convert(eltype(x), first(x) - y)
     catch e
         if e isa InexactError
-            throw(ArgumentError("Subtracting the center $(y) changes the eltype of "*
+            throw(ArgumentError("Subtracting the center $(y) changes the eltype of " *
                                 "the array. Promote to $(typeof(first(x) - y)) first."))
         else
             rethrow(e)
