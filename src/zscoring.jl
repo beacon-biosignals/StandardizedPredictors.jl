@@ -114,7 +114,7 @@ zscore(args...; kwargs...) = StatsBase.zscore(args...; kwargs...)
 
 # run-time constructors:
 zscore(t::ContinuousTerm, z::ZScore) = ZScoredTerm(t, something(z.center, t.mean), something(z.scale, sqrt(t.var)))
-zscore(t::ContinuousTerm; center=nothing, scale=nothing) = ZScoredTerm(t, ZScore(center, scale))
+zscore(t::ContinuousTerm; center=nothing, scale=nothing) = ZScoredTerm(t, center, scale)
 zscore(t::AbstractTerm) = throw(ArgumentError("can only compute z-score for ContinuousTerm; must provide scale value via zscore(t; center, scale)"))
 
 function zscore(t::AbstractTerm, z::ZScore)

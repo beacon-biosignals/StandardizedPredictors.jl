@@ -35,6 +35,8 @@
         @test yc.center ≈ 1 != mean(data.y)
         @test yc.scale == 3 != std(data.y)
         @test modelcols(yc, data) ≈ zscore(data.y, yc.center, yc.scale)
+
+        @test zscore(concrete_term(term(:x), data, nothing); center=3, scale=5) == concrete_term(term(:x), data, ZScore(;center=3, scale=5))
     end
 
     @testset "Schema hints dict" begin
