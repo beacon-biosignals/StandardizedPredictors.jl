@@ -3,7 +3,12 @@
 
 Scale an array `x` by a scalar `y`.
 
-See also [`scale`](@ref)
+
+!!! warning
+    This only scales and does not center the values, unlike `scale` in R.
+    See `StatsBase.zscore` for that functionality.
+
+See also [`scale!`](@ref)
 """
 scale(x) = scale(std, x)
 scale(f::Function, x) = scale(x, f(skipmissing(x)))
@@ -13,6 +18,10 @@ scale(x, y) = x ./ y
     scale(f=std, x, y=f(skipmissing(x)))
 
 Scale an array `x` in place by a scalar `y`.
+
+!!! warning
+    This only scales and does not center the values, unlike `scale` in R.
+    See `StatsBase.zscore` for that functionality.
 
 See also [`scale`](@ref)
 """
