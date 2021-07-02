@@ -167,7 +167,7 @@ function StatsBase.coefnames(t::CenteredTerm)
         return string.(coefnames(t.term), "(centered: ", t.center, ")")
     end
 end
-# coef table: "x: centered at 5.5"
+# coef table: "x(centered: 5.5)"
 Base.show(io::IO, t::CenteredTerm) = show(io, t.term)
 # regular show: "x"
 Base.show(io::IO, ::MIME"text/plain", t::CenteredTerm) = print(io, "$(t.term)(centered: $(t.center))")
