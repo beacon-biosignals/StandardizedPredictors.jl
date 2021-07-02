@@ -100,7 +100,7 @@ julia> t = concrete_term(term(:x), d)
 x(continuous)
 
 julia> ts = ScaledTerm(t, 5)
-scale(x, 5)
+x(scaled: 5)
 
 julia> hcat(modelcols(t + ts, d)...)
 10×2 Matrix{Float64}:

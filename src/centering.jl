@@ -92,7 +92,7 @@ julia> t = concrete_term(term(:x), d)
 x(continuous)
 
 julia> tc = CenteredTerm(t, 5)
-center(x, 5)
+x(centered: 5)
 
 julia> hcat(modelcols(t + tc, d)...)
 10×2 Matrix{Int64}:

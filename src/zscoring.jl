@@ -32,7 +32,7 @@ ZScore(; center=nothing, scale=nothing) = ZScore(center, scale)
 """
     struct ZScoredTerm{T,C,S} <: AbstractTerm
 
-A lazily z-scored term.  A wrapper around an `T<:AbstractTerm` which will
+A lazily z-scored term. A wrapper around an `T<:AbstractTerm` which will
 produce scaled values with `modelcols` by subtracting `center` from each
 element and then dividing by `scale`.
 
@@ -52,41 +52,41 @@ julia> d = (x=collect(1:10), );
 julia> t = concrete_term(term(:x), d)
 x(continuous)
 
-julia> ts = ScaledTerm(t, 5)
-zscore(x, 5)
+julia> ts = ZScoredTerm(t, 3, 5)
+x(centered: 3 scaled: 5)
 
 julia> hcat(modelcols(t + ts, d)...)
 10×2 Matrix{Float64}:
-  1.0  0.2
-  2.0  0.4
-  3.0  0.6
-  4.0  0.8
-  5.0  1.0
-  6.0  1.2
-  7.0  1.4
-  8.0  1.6
-  9.0  1.8
- 10.0  2.0
+  1.0  -0.4
+  2.0  -0.2
+  3.0   0.0
+  4.0   0.2
+  5.0   0.4
+  6.0   0.6
+  7.0   0.8
+  8.0   1.0
+  9.0   1.2
+ 10.0   1.4
 ```
 
-Construct with lazy scaling via [`Scale`](@ref)
+Construct with lazy scaling via [`ZScore`](@ref)
 
 ```
 julia> ts = concrete_term(term(:x), d, ZScore())
-x(scaled: 3.0277)
+x(centered: 5.5 scaled: 3.0277)
 
 julia> hcat(modelcols(t + ts, d)...)
 10×2 Matrix{Float64}:
-  1.0  0.330289
-  2.0  0.660578
-  3.0  0.990867
-  4.0  1.32116
-  5.0  1.65145
-  6.0  1.98173
-  7.0  2.31202
-  8.0  2.64231
-  9.0  2.9726
- 10.0  3.30289
+  1.0  -1.4863
+  2.0  -1.15601
+  3.0  -0.825723
+  4.0  -0.495434
+  5.0  -0.165145
+  6.0   0.165145
+  7.0   0.495434
+  8.0   0.825723
+  9.0   1.15601
+ 10.0   1.4863
 ```
 
 Or similarly via schema hints:
@@ -94,7 +94,7 @@ Or similarly via schema hints:
 ```
 julia> sch = schema(d, Dict(:x => ZScore()))
 StatsModels.Schema with 1 entry:
-  x => zscore(x, 3.0277)
+  x => x(centered: 5.5 scaled: 3.0277)
 ```
 
 
