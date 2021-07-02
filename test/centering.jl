@@ -103,8 +103,7 @@
     @testset "printing" begin
         xc = concrete_term(term(:x), data, Center())
         @test StatsModels.termsyms(xc) == Set([:x])
-        @test "$(xc)" == "$(xc.term)"
-        @test string_mime(MIME("text/plain"), xc) == "x(centered: 5.5)"
+        @test "$(xc)" == string_mime(MIME("text/plain"), xc) == "x(centered: 5.5)"
         @test coefnames(xc) == "x(centered: 5.5)"
     end
 

@@ -102,8 +102,7 @@
     @testset "printing" begin
         xc = concrete_term(term(:x), data, Scale())
         @test StatsModels.termsyms(xc) == Set([:x])
-        @test "$(xc)" == "$(xc.term)"
-        @test string_mime(MIME("text/plain"), xc) == "x(scaled: 3.0277)"
+        @test "$(xc)" == string_mime(MIME("text/plain"), xc) == "x(scaled: 3.0277)"
         @test coefnames(xc) == "x(scaled: 3.0277)"
     end
 
