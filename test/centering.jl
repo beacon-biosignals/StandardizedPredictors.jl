@@ -75,6 +75,7 @@
             center!(mean, copy(x)) == center(mean, x)
             @test_throws ArgumentError center!(mean, [1, 2])
             @test_throws ArgumentError center!([1, 2])
+            @test_throws MethodError center!(x -> 1, ["a","b"])
         end
     end
 
