@@ -94,37 +94,37 @@ julia> ts = ScaledTerm(t, 5)
 scale(x, 5)
 
 julia> hcat(modelcols(t + ts, d)...)
-10×2 Matrix{Int64}:
-  1  -4
-  2  -3
-  3  -2
-  4  -1
-  5   0
-  6   1
-  7   2
-  8   3
-  9   4
- 10   5
+10×2 Matrix{Float64}:
+  1.0  0.2
+  2.0  0.4
+  3.0  0.6
+  4.0  0.8
+  5.0  1.0
+  6.0  1.2
+  7.0  1.4
+  8.0  1.6
+  9.0  1.8
+ 10.0  2.0
 ```
 
 Construct with lazy scaling via [`Scale`](@ref)
 
 ```
 julia> ts = concrete_term(term(:x), d, Scale())
-scale(x, 5.5)
+x(scaled: 3.0277)
 
 julia> hcat(modelcols(t + ts, d)...)
 10×2 Matrix{Float64}:
-  1.0  -4.5
-  2.0  -3.5
-  3.0  -2.5
-  4.0  -1.5
-  5.0  -0.5
-  6.0   0.5
-  7.0   1.5
-  8.0   2.5
-  9.0   3.5
- 10.0   4.5
+  1.0  0.330289
+  2.0  0.660578
+  3.0  0.990867
+  4.0  1.32116
+  5.0  1.65145
+  6.0  1.98173
+  7.0  2.31202
+  8.0  2.64231
+  9.0  2.9726
+ 10.0  3.30289
 ```
 
 Or similarly via schema hints:
@@ -132,7 +132,7 @@ Or similarly via schema hints:
 ```
 julia> sch = schema(d, Dict(:x => Scale()))
 StatsModels.Schema with 1 entry:
-  x => scale(x, 5.5)
+  x => scale(x, 3.0277)
 ```
 
 
@@ -172,8 +172,8 @@ function StatsBase.coefnames(t::ScaledTerm)
     end
 end
 # coef table: "x(scaled: 5.5)"
-Base.show(io::IO, t::ScaledTerm) = show(io, t.term)
-# regular show: "x"
+Base.show(io::IO, t::ScaledTerm) = print(io, "$(t.term)(scaled: $(_round_scale(t.scale)))")
+# regular show: "x(scaled: 5.5)", used in displaying schema dicts
 Base.show(io::IO, ::MIME"text/plain", t::ScaledTerm) = print(io, "$(t.term)(scaled: $(_round_scale(t.scale)))")
 # long show: "x(scaled: 5.5)"
 

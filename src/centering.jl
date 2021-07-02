@@ -168,8 +168,8 @@ function StatsBase.coefnames(t::CenteredTerm)
     end
 end
 # coef table: "x(centered: 5.5)"
-Base.show(io::IO, t::CenteredTerm) = show(io, t.term)
-# regular show: "x"
+Base.show(io::IO, t::CenteredTerm) = print(io, "$(t.term)(centered: $(t.center))")
+# regular show: "x(centered: 5.5)", used in displaying schema dicts
 Base.show(io::IO, ::MIME"text/plain", t::CenteredTerm) = print(io, "$(t.term)(centered: $(t.center))")
 # long show: "x(centered: 5.5)"
 
