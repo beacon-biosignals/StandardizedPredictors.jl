@@ -19,7 +19,7 @@ Or scale will be automatically computed if left out:
 ```
 julia> schema((x=collect(1:10), ), Dict(:x => ZScore()))
 StatsModels.Schema with 1 entry:
-  x => x(centered: 5.5 scaled: 3.0277)
+  x => x(centered: 5.5 scaled: 3.03)
 ```
 """
 struct ZScore
@@ -73,7 +73,7 @@ Construct with lazy scaling via [`ZScore`](@ref)
 
 ```
 julia> ts = concrete_term(term(:x), d, ZScore())
-x(centered: 5.5 scaled: 3.0277)
+x(centered: 5.5 scaled: 3.03)
 
 julia> hcat(modelcols(t + ts, d)...)
 10×2 Matrix{Float64}:
@@ -94,7 +94,7 @@ Or similarly via schema hints:
 ```
 julia> sch = schema(d, Dict(:x => ZScore()))
 StatsModels.Schema with 1 entry:
-  x => x(centered: 5.5 scaled: 3.0277)
+  x => x(centered: 5.5 scaled: 3.03)
 ```
 
 

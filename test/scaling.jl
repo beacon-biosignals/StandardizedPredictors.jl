@@ -92,7 +92,7 @@
                            data.y ./ 2,
                            (data.x ./ std(data.x)) .* (data.y ./ 2))
 
-        @test coefnames(ff_c.rhs) == ["x(scaled: 3.0277)", "y(scaled: 2)", "x(scaled: 3.0277) & y(scaled: 2)"]
+        @test coefnames(ff_c.rhs) == ["x(scaled: 3.03)", "y(scaled: 2)", "x(scaled: 3.03) & y(scaled: 2)"]
 
         # round-trip schema is empty since needs_schema is false
         sch_2 = schema(ff_c, data)
@@ -102,8 +102,8 @@
     @testset "printing" begin
         xc = concrete_term(term(:x), data, Scale())
         @test StatsModels.termsyms(xc) == Set([:x])
-        @test "$(xc)" == string_mime(MIME("text/plain"), xc) == "x(scaled: 3.0277)"
-        @test coefnames(xc) == "x(scaled: 3.0277)"
+        @test "$(xc)" == string_mime(MIME("text/plain"), xc) == "x(scaled: 3.03)"
+        @test coefnames(xc) == "x(scaled: 3.03)"
     end
 
     @testset "categorical term" begin

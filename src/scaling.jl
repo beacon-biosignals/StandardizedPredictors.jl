@@ -54,7 +54,7 @@ Or scale will be automatically computed if left out:
 ```
 julia> schema((x=collect(1:10), ), Dict(:x => Scale()))
 StatsModels.Schema with 1 entry:
-  x => x(scaled: 3.0277)
+  x => x(scaled: 3.03)
 ```
 """
 struct Scale
@@ -106,7 +106,7 @@ Construct with lazy scaling via [`Scale`](@ref)
 
 ```
 julia> ts = concrete_term(term(:x), d, Scale())
-x(scaled: 3.0277)
+x(scaled: 3.03)
 
 julia> hcat(modelcols(t + ts, d)...)
 10×2 Matrix{Float64}:
@@ -127,7 +127,7 @@ Or similarly via schema hints:
 ```
 julia> sch = schema(d, Dict(:x => Scale()))
 StatsModels.Schema with 1 entry:
-  x => scale(x, 3.0277)
+  x => scale(x, 3.03)
 ```
 
 

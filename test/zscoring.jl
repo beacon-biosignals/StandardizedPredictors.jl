@@ -73,9 +73,9 @@
                           zscore(data.y, 2.2, 5),
                           zscore(data.x) .* zscore(data.y, 2.2, 5))
 
-        @test coefnames(ff_c.rhs) ==  ["x(centered: 5.5 scaled: 3.0277)",
+        @test coefnames(ff_c.rhs) ==  ["x(centered: 5.5 scaled: 3.03)",
                                        "y(centered: 2.2 scaled: 5)",
-                                       "x(centered: 5.5 scaled: 3.0277) & y(centered: 2.2 scaled: 5)"]
+                                       "x(centered: 5.5 scaled: 3.03) & y(centered: 2.2 scaled: 5)"]
 
         # round-trip schema is empty since needs_schema is false
         sch_2 = schema(ff_c, data)
@@ -85,8 +85,8 @@
     @testset "printing" begin
         xc = concrete_term(term(:x), data, ZScore())
         @test StatsModels.termsyms(xc) == Set([:x])
-        @test "$(xc)" == string_mime(MIME("text/plain"), xc) == "x(centered: 5.5 scaled: 3.0277)"
-        @test coefnames(xc) == "x(centered: 5.5 scaled: 3.0277)"
+        @test "$(xc)" == string_mime(MIME("text/plain"), xc) == "x(centered: 5.5 scaled: 3.03)"
+        @test coefnames(xc) == "x(centered: 5.5 scaled: 3.03)"
     end
 
     @testset "categorical term" begin
