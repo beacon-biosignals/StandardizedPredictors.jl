@@ -56,9 +56,8 @@
         @test modelcols(yc, data) ≈ zscore(data.y, 2.2, 5)
     end
 
-    @testset "zscore function" begin
-        # taken care of by StatsBase 😎
-    end
+    # no need to test "zscore function"
+    # taken care of by StatsBase 😎
 
     @testset "plays nicely with formula" begin
         f = @formula(0 ~ x * y)
