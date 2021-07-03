@@ -73,8 +73,8 @@
             @test scale!(minimum, copy(x)) == x
             # this converts exactly to int, so you can do it in place
             @test scale!([2 4 6]) == scale([2 4 6])
-            @test_throws ArgumentError scale!(std, [1, 2])
-            @test_throws ArgumentError scale!([1, 2])
+            @test_throws InexactError scale!(std, [1, 2])
+            @test_throws InexactError scale!([1, 2])
             @test_throws MethodError scale!(v -> 1, ["a","b"])
         end
     end
