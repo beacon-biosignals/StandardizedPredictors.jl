@@ -114,7 +114,7 @@ StatsBase.zscore(t::ContinuousTerm; center=nothing, scale=nothing) = ZScoredTerm
 StatsBase.zscore(t::AbstractTerm) = throw(ArgumentError("can only compute z-score for ContinuousTerm; must provide scale value via zscore(t; center, scale)"))
 
 function StatsBase.zscore(t::AbstractTerm, z::ZScore)
-    z.scale !== nothing && z.center !== nothing || throw(ArgumentError("xxxcan only compute z-score for ContinuousTerm; must provide scale via zscore(t; center, scale)"))
+    z.scale !== nothing && z.center !== nothing || throw(ArgumentError("can only compute z-score for ContinuousTerm; must provide scale via zscore(t; center, scale)"))
     return ZScoredTerm(t, z.center, z.scale)
 end
 
