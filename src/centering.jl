@@ -178,3 +178,4 @@ StatsModels.width(t::CenteredTerm) = StatsModels.width(t.term)
 # don't generate schema entries for terms which are already centered
 StatsModels.needs_schema(::CenteredTerm) = false
 StatsModels.termsyms(t::CenteredTerm) = StatsModels.termsyms(t.term)
+StatsModels.termvars(t::CenteredTerm) = StatsModels.termvars(t.term)

@@ -140,3 +140,4 @@ StatsModels.width(t::ZScoredTerm) = StatsModels.width(t.term)
 # don't generate schema entries for terms which are already scaled
 StatsModels.needs_schema(::ZScoredTerm) = false
 StatsModels.termsyms(t::ZScoredTerm) = StatsModels.termsyms(t.term)
+StatsModels.termvars(t::ZScoredTerm) = StatsModels.termvars(t.term)
