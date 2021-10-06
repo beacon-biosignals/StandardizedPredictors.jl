@@ -98,6 +98,14 @@
         # round-trip schema is empty since needs_schema is false
         sch_2 = schema(ff_c, data)
         @test isempty(sch_2.schema)
+
+        @testset "missing omit" begin
+            d = (x=[1, 2, missing, 3], y=[1, missing, 2, 3], z=[missing, 1, 2, 3])
+            dd, nonmissing = StatsModels.missing_omit(d, ff_c)
+            @test findall(nonmissing) == [1, 4]
+            @test dd.x == d.x[nonmissing]
+            @test dd.y == d.y[nonmissing]
+        end
     end
 
     @testset "printing" begin
