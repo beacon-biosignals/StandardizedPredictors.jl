@@ -105,7 +105,7 @@
             @test findall(nonmissing) == [1, 4]
             @test dd.x == d.x[nonmissing]
             @test dd.y == d.y[nonmissing]
-        end            
+        end
     end
 
     @testset "printing" begin

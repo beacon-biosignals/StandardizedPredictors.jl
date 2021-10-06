@@ -88,7 +88,7 @@
             # x and y are handled correclty
             @test dd.x == d.x[nonmissing]
             @test dd.y == d.y[nonmissing]
-        end            
+        end
     end
 
     @testset "printing" begin
