@@ -49,7 +49,13 @@ StatsModels.Schema with 1 entry:
   x => x(scaled: 5))
 ```
 
-Or scale will be automatically computed if left out:
+You can use a function to compute the scale value:
+
+julia> schema((x=collect(1:10), ), Dict(:x => Scale(mad)))
+StatsModels.Schema with 1 entry:
+  x => x(scaled: 3.71)
+
+Or [`scale`](@ref) will be automatically computed if left out:
 
 ```
 julia> schema((x=collect(1:10), ), Dict(:x => Scale()))
@@ -62,7 +68,7 @@ struct Scale
 end
 
 Scale() = Scale(nothing)
-
+Scale(xs::AbstractArray, s::Scale) = Scale(_standard(xs, s.scale))
 
 """
     struct ScaledTerm{T,S} <: AbstractTerm
@@ -130,24 +136,27 @@ StatsModels.Schema with 1 entry:
   x => scale(x, 3.03)
 ```
 
-
 """
 struct ScaledTerm{T,S} <: AbstractTerm
     term::T
     scale::S
 end
 
-StatsModels.concrete_term(t::Term, xs::AbstractArray, s::Scale) =
-    scale(StatsModels.concrete_term(t, xs, nothing), s)
+function StatsModels.concrete_term(t::Term, xs::AbstractArray, s::Scale)
+    return scale(StatsModels.concrete_term(t, xs, nothing), Scale(xs, s))
+end
 
 # run-time constructors:
 scale(t::ContinuousTerm, s::Scale) = ScaledTerm(t, something(s.scale, sqrt(t.var)))
 scale(t::ContinuousTerm, s) = ScaledTerm(t, s)
 scale(t::ContinuousTerm) = ScaledTerm(t, sqrt(t.var))
-scale(t::AbstractTerm) = throw(ArgumentError("can only compute scale for ContinuousTerm; must provide scale value via scale(t, s)"))
+function scale(t::AbstractTerm)
+    throw(ArgumentError("can only compute scale for ContinuousTerm; must provide scale value via scale(t, s)"))
+end
 
 function scale(t::AbstractTerm, s::Scale)
-    s.scale !== nothing || throw(ArgumentError("can only compute scale for ContinuousTerm; must provide scale via scale(t, s)"))
+    s.scale !== nothing ||
+        throw(ArgumentError("can only compute scale for ContinuousTerm; must provide scale via scale(t, s)"))
     return ScaledTerm(t, s.scale)
 end
 
@@ -165,7 +174,9 @@ end
 # coef table: "x(scaled: 5.5)"
 Base.show(io::IO, t::ScaledTerm) = print(io, "$(t.term)(scaled: $(_round(t.scale)))")
 # regular show: "x(scaled: 5.5)", used in displaying schema dicts
-Base.show(io::IO, ::MIME"text/plain", t::ScaledTerm) = print(io, "$(t.term)(scaled: $(_round(t.scale)))")
+function Base.show(io::IO, ::MIME"text/plain", t::ScaledTerm)
+    return print(io, "$(t.term)(scaled: $(_round(t.scale)))")
+end
 # long show: "x(scaled: 5.5)"
 
 # statsmodels glue code:

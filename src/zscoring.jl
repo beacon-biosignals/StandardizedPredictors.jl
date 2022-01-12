@@ -29,6 +29,12 @@ end
 
 ZScore(; center=nothing, scale=nothing) = ZScore(center, scale)
 
+function ZScore(xs::AbstractArray, zs::ZScore)
+    center = _standard(xs, zs.center)
+    scale = _standard(xs, zs.scale)
+    return ZScore(center, scale)
+end
+
 """
     struct ZScoredTerm{T,C,S} <: AbstractTerm
 
@@ -105,34 +111,50 @@ struct ZScoredTerm{T,C,S} <: AbstractTerm
     scale::S
 end
 
-StatsModels.concrete_term(t::Term, xs::AbstractArray, z::ZScore) =
-    zscore(StatsModels.concrete_term(t, xs, nothing), z)
+function StatsModels.concrete_term(t::Term, xs::AbstractArray, z::ZScore)
+    return zscore(StatsModels.concrete_term(t, xs, nothing), ZScore(xs, z))
+end
 
 # run-time constructors:
-StatsBase.zscore(t::ContinuousTerm, z::ZScore) = ZScoredTerm(t, something(z.center, t.mean), something(z.scale, sqrt(t.var)))
-StatsBase.zscore(t::ContinuousTerm; center=nothing, scale=nothing) = ZScoredTerm(t, center, scale)
-StatsBase.zscore(t::AbstractTerm) = throw(ArgumentError("can only compute z-score for ContinuousTerm; must provide scale value via zscore(t; center, scale)"))
+function StatsBase.zscore(t::ContinuousTerm, z::ZScore)
+    return ZScoredTerm(t, something(z.center, t.mean), something(z.scale, sqrt(t.var)))
+end
+function StatsBase.zscore(t::ContinuousTerm; center=nothing, scale=nothing)
+    return ZScoredTerm(t, center, scale)
+end
+function StatsBase.zscore(t::AbstractTerm)
+    throw(ArgumentError("can only compute z-score for ContinuousTerm; must provide scale value via zscore(t; center, scale)"))
+end
 
 function StatsBase.zscore(t::AbstractTerm, z::ZScore)
-    z.scale !== nothing && z.center !== nothing || throw(ArgumentError("can only compute z-score for ContinuousTerm; must provide scale via zscore(t; center, scale)"))
+    z.scale !== nothing && z.center !== nothing ||
+        throw(ArgumentError("can only compute z-score for ContinuousTerm; must provide scale via zscore(t; center, scale)"))
     return ZScoredTerm(t, z.center, z.scale)
 end
 
-StatsModels.modelcols(t::ZScoredTerm, d::NamedTuple) = zscore(modelcols(t.term, d), t.center, t.scale)
+function StatsModels.modelcols(t::ZScoredTerm, d::NamedTuple)
+    return zscore(modelcols(t.term, d), t.center, t.scale)
+end
 
 function StatsBase.coefnames(t::ZScoredTerm)
     if StatsModels.width(t.term) == 1
         return "$(coefnames(t.term))(centered: $(_round(t.center)) scaled: $(_round(t.scale)))"
     elseif length(t.scale) > 1
-        return string.(vec(coefnames(t.term)), "(centered: ", _round.(vec(t.center)), " scaled: ", _round.(vec(t.scale)), ")")
+        return string.(vec(coefnames(t.term)), "(centered: ", _round.(vec(t.center)),
+                       " scaled: ", _round.(vec(t.scale)), ")")
     else
-        return string.(coefnames(t.term), "(centered: ", _round(t.center), " scaled: ", _round(t.scale), ")")
+        return string.(coefnames(t.term), "(centered: ", _round(t.center), " scaled: ",
+                       _round(t.scale), ")")
     end
 end
 # coef table: "x(scaled: 5.5)"
-Base.show(io::IO, t::ZScoredTerm) = print(io, "$(t.term)(centered: $(_round(t.center)) scaled: $(_round(t.scale)))")
+function Base.show(io::IO, t::ZScoredTerm)
+    return print(io, "$(t.term)(centered: $(_round(t.center)) scaled: $(_round(t.scale)))")
+end
 # regular show: "x(scaled: 5.5)", used in displaying schema dicts
-Base.show(io::IO, ::MIME"text/plain", t::ZScoredTerm) = print(io, "$(t.term)(centered: $(_round(t.center)) scaled: $(_round(t.scale)))")
+function Base.show(io::IO, ::MIME"text/plain", t::ZScoredTerm)
+    return print(io, "$(t.term)(centered: $(_round(t.center)) scaled: $(_round(t.scale)))")
+end
 # long show: "x(scaled: 5.5)"
 
 # statsmodels glue code:
