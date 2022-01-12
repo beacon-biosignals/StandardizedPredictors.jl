@@ -14,6 +14,13 @@
         @test yc isa CenteredTerm
         @test yc.center == mean(data.y)
         @test modelcols(yc, data) == data.y .- mean(data.y) == data.y .- yc.center
+
+        @testset "alternative center function" begin
+            xc = concrete_term(term(:x), data, Center(median))
+            @test xc isa CenteredTerm
+            @test xc.center == median(data.x)
+            @test modelcols(xc, data) == data.x .- median(data.x) == data.x .- xc.center
+        end
     end
 
     @testset "Manual centering" begin
