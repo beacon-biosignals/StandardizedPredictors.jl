@@ -16,11 +16,17 @@
         @test modelcols(yc, data) ≈ zscore(data.y) ≈ zscore(data.y, yc.center, yc.scale)
 
         @testset "alternative center and scale functions" begin
-            xc = concrete_term(term(:x), data, ZScore(median, mad))
+            f, g = first, mad
+            xc = concrete_term(term(:x), data, ZScore(f, g))
             @test xc isa ZScoredTerm
-            @test xc.center ≈ median(data.x)
-            @test xc.scale ≈ mad(data.x)
+            @test xc.center ≈ f(data.x)
+            @test xc.scale ≈ g(data.x)
             @test modelcols(xc, data) ≈ zscore(data.x, xc.center, xc.scale)
+            # why test this? well this makes sure that our tests
+            # wouldn't pass if we were using the default scale function
+            # in other words, this tests we're actually hitting a different codepath
+            @test !isapprox(mean(data.x), f(data.x))
+            @test !isapprox(std(data.x), g(data.x))
         end
     end
 

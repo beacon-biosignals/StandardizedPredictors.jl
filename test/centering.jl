@@ -15,10 +15,15 @@
         @test modelcols(yc, data) == data.y .- mean(data.y) == data.y .- yc.center
 
         @testset "alternative center function" begin
-            xc = concrete_term(term(:x), data, Center(median))
+            f = first
+            xc = concrete_term(term(:x), data, Center(f))
             @test xc isa CenteredTerm
-            @test xc.center == median(data.x)
-            @test modelcols(xc, data) == data.x .- median(data.x) == data.x .- xc.center
+            @test xc.center == f(data.x)
+            @test modelcols(xc, data) == data.x .- f(data.x) == data.x .- xc.center
+            # why test this? well this makes sure that our tests
+            # wouldn't pass if we were using the default center function
+            # in other words, this tests we're actually hitting a different codepath
+            @test !isapprox(mean(data.x), f(data.x))
         end
     end
 

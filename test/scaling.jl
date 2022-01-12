@@ -15,10 +15,15 @@
         @test modelcols(yc, data) == data.y ./ std(data.y) == data.y ./ yc.scale
 
         @testset "alternative scale function" begin
-            xc = concrete_term(term(:x), data, Scale(mad))
+            f = mad
+            xc = concrete_term(term(:x), data, Scale(f))
             @test xc isa ScaledTerm
-            @test xc.scale == mad(data.x)
-            @test modelcols(xc, data) == data.x ./ mad(data.x) == data.x ./ xc.scale
+            @test xc.scale == f(data.x)
+            @test modelcols(xc, data) == data.x ./ f(data.x) == data.x ./ xc.scale
+            # why test this? well this makes sure that our tests
+            # wouldn't pass if we were using the default scale function
+            # in other words, this tests we're actually hitting a different codepath
+            @test !isapprox(std(data.x), f(data.x))
         end
     end
 
