@@ -142,12 +142,7 @@ struct ScaledTerm{T,S} <: AbstractTerm
     scale::S
 end
 
-
-Scale(xs::AbstractArray, s::Scale) = Scale(xs, s.scale, s)
-# pass through
-Scale(::AbstractArray, ::Nothing, parent) = Scale(nothing)
-Scale(xs::AbstractArray, s, parent) = Scale(s(xs))
-Scale(::AbstractArray, s::Number, parent) = parent
+Scale(xs::AbstractArray, s::Scale) = Scale(_standard(xs, s.scale))
 
 function StatsModels.concrete_term(t::Term, xs::AbstractArray, s::Scale)
     return scale(StatsModels.concrete_term(t, xs, nothing), Scale(xs, s))
