@@ -146,7 +146,7 @@ end
 Scale(xs::AbstractArray, s::Scale) = Scale(xs, s.scale, s)
 # pass through
 Scale(::AbstractArray, ::Nothing, parent) = Scale(nothing)
-Scale(xs::AbstractArray, s, parent) = s(xs)
+Scale(xs::AbstractArray, s, parent) = Scale(s(xs))
 Scale(::AbstractArray, s::Number, parent) = parent
 
 function StatsModels.concrete_term(t::Term, xs::AbstractArray, s::Scale)

@@ -150,7 +150,7 @@ end
 Center(xs::AbstractArray, c::Center) = Center(xs, c.center, c)
 # pass through
 Center(::AbstractArray, ::Nothing, parent) = Center(nothing)
-Center(xs::AbstractArray, c, parent) = c(xs)
+Center(xs::AbstractArray, c, parent) = Center(c(xs))
 Center(::AbstractArray, c::Number, parent) = parent
 
 function StatsModels.concrete_term(t::Term, xs::AbstractArray, c::Center)
