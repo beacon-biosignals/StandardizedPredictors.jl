@@ -1,5 +1,4 @@
 @testset "Centering" begin
-
     data = (x=collect(1:10),
             y=rand(10) .+ 3,
             z=Symbol.(repeat('a':'e', 2)))
@@ -83,7 +82,7 @@
             center!(mean, copy(x)) == center(mean, x)
             @test_throws ArgumentError center!(mean, [1, 2])
             @test_throws ArgumentError center!([1, 2])
-            @test_throws MethodError center!(v -> 1, ["a","b"])
+            @test_throws MethodError center!(v -> 1, ["a", "b"])
         end
     end
 
@@ -100,7 +99,8 @@
                            data.y .- 2,
                            (data.x .- mean(data.x)) .* (data.y .- 2))
 
-        @test coefnames(ff_c.rhs) == ["x(centered: 5.5)", "y(centered: 2)", "x(centered: 5.5) & y(centered: 2)"]
+        @test coefnames(ff_c.rhs) ==
+              ["x(centered: 5.5)", "y(centered: 2)", "x(centered: 5.5) & y(centered: 2)"]
 
         # round-trip schema is empty since needs_schema is false
         sch_2 = schema(ff_c, data)
@@ -133,11 +133,11 @@
 
         zc2 = center(z, Center([1 2 3 4]))
         @test modelcols(zc2, data) == modelcols(z, data) .- [1 2 3 4]
-        @test coefnames(zc2) == coefnames(z) .* "(centered: " .* string.([1, 2, 3, 4]) .* ")"
+        @test coefnames(zc2) ==
+              coefnames(z) .* "(centered: " .* string.([1, 2, 3, 4]) .* ")"
     end
 
     # @testset "utilities" begin
-
 
     # end
 

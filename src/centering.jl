@@ -157,10 +157,13 @@ end
 center(t::ContinuousTerm, c::Center) = CenteredTerm(t, something(c.center, t.mean))
 center(t::ContinuousTerm, c) = CenteredTerm(t, c)
 center(t::ContinuousTerm) = CenteredTerm(t, t.mean)
-center(t::AbstractTerm) = throw(ArgumentError("can only compute center for ContinuousTerm; must provide center value via center(t, c)"))
+function center(t::AbstractTerm)
+    throw(ArgumentError("can only compute center for ContinuousTerm; must provide center value via center(t, c)"))
+end
 
 function center(t::AbstractTerm, c::Center)
-    c.center !== nothing || throw(ArgumentError("can only compute center for ContinuousTerm; must provide center via center(t, c)"))
+    c.center !== nothing ||
+        throw(ArgumentError("can only compute center for ContinuousTerm; must provide center via center(t, c)"))
     return CenteredTerm(t, c.center)
 end
 
@@ -177,7 +180,9 @@ end
 # coef table: "x(centered: 5.5)"
 Base.show(io::IO, t::CenteredTerm) = print(io, "$(t.term)(centered: $(_round(t.center)))")
 # regular show: "x(centered: 5.5)", used in displaying schema dicts
-Base.show(io::IO, ::MIME"text/plain", t::CenteredTerm) = print(io, "$(t.term)(centered: $(_round(t.center)))")
+function Base.show(io::IO, ::MIME"text/plain", t::CenteredTerm)
+    return print(io, "$(t.term)(centered: $(_round(t.center)))")
+end
 # long show: "x(centered: 5.5)"
 
 # statsmodels glue code:

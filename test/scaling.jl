@@ -1,5 +1,4 @@
 @testset "Scaling" begin
-
     data = (x=collect(1:10),
             y=rand(10) .+ 3,
             z=Symbol.(repeat('a':'e', 2)))
@@ -65,8 +64,8 @@
         @testset "scaling vectors" begin
             x = collect(1:5) # int
             y = x * 5.0      # float
-            @test scale(x) ==  x ./ std(x)
-            @test scale(y) ==  y ./ std(y)
+            @test scale(x) == x ./ std(x)
+            @test scale(y) == y ./ std(y)
             @test scale(maximum, x) == (x ./ 5)
             @test all(scale(y, x) .== 5)
 
@@ -82,7 +81,7 @@
             @test scale!([2 4 6]) == scale([2 4 6])
             @test_throws InexactError scale!(std, [1, 2])
             @test_throws InexactError scale!([1, 2])
-            @test_throws MethodError scale!(v -> 1, ["a","b"])
+            @test_throws MethodError scale!(v -> 1, ["a", "b"])
         end
     end
 
@@ -99,7 +98,8 @@
                            data.y ./ 2,
                            (data.x ./ std(data.x)) .* (data.y ./ 2))
 
-        @test coefnames(ff_c.rhs) == ["x(scaled: 3.03)", "y(scaled: 2)", "x(scaled: 3.03) & y(scaled: 2)"]
+        @test coefnames(ff_c.rhs) ==
+              ["x(scaled: 3.03)", "y(scaled: 2)", "x(scaled: 3.03) & y(scaled: 2)"]
 
         # round-trip schema is empty since needs_schema is false
         sch_2 = schema(ff_c, data)
