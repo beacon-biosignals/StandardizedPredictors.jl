@@ -54,7 +54,13 @@ StatsModels.Schema with 1 entry:
   x => center(x, 5)
 ```
 
-Or center will be automatically computed if left out:
+You can use a function to compute the center value:
+
+julia> schema((x=collect(1:10), ), Dict(:x => Center(median)))
+StatsModels.Schema with 1 entry:
+  x => x(centered: 5.5)
+
+Or [`center`](@ref) will be automatically computed if omitted:
 
 ```
 julia> schema((x=collect(1:10), ), Dict(:x => Center()))
@@ -67,7 +73,6 @@ struct Center{T}
 end
 
 Center() = Center(nothing)
-
 
 """
     struct CenteredTerm{T,C} <: AbstractTerm
