@@ -29,6 +29,12 @@ end
 
 ZScore(; center=nothing, scale=nothing) = ZScore(center, scale)
 
+function ZScore(xs::AbstractArray, zs::ZScore)
+    center = _standard(xs, zs.center)
+    scale = _standard(xs, zs.scale)
+    return ZScore(center, scale)
+end
+
 """
     struct ZScoredTerm{T,C,S} <: AbstractTerm
 
@@ -103,12 +109,6 @@ struct ZScoredTerm{T,C,S} <: AbstractTerm
     term::T
     center::C
     scale::S
-end
-
-function ZScore(xs::AbstractArray, zs::ZScore)
-    center = _standard(xs, zs.center)
-    scale = _standard(xs, zs.scale)
-    return ZScore(center, scale)
 end
 
 function StatsModels.concrete_term(t::Term, xs::AbstractArray, z::ZScore)

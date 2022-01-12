@@ -73,6 +73,7 @@ struct Center
 end
 
 Center() = Center(nothing)
+Center(xs::AbstractArray, c::Center) = Center(_standard(xs, c.center))
 
 """
     struct CenteredTerm{T,C} <: AbstractTerm
@@ -146,8 +147,6 @@ struct CenteredTerm{T,C} <: AbstractTerm
     term::T
     center::C
 end
-
-Center(xs::AbstractArray, c::Center) = Center(_standard(xs, c.center))
 
 function StatsModels.concrete_term(t::Term, xs::AbstractArray, c::Center)
     return center(StatsModels.concrete_term(t, xs, nothing), Center(xs, c))
