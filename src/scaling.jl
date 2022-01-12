@@ -34,7 +34,7 @@ function scale!(x, y)
 end
 
 """
-    struct Scale
+    struct Scale{T}
 
 Represents a scaling scheme, akin to `StatsModels.AbstractContrasts`.  Pass as
 value in `Dict` as hints to `schema` (or as `contrasts` kwarg for `fit`).
@@ -49,7 +49,13 @@ StatsModels.Schema with 1 entry:
   x => x(scaled: 5))
 ```
 
-Or scale will be automatically computed if left out:
+You can use a function to compute the scale value:
+
+julia> schema((x=collect(1:10), ), Dict(:x => Scale(mad)))
+StatsModels.Schema with 1 entry:
+  x => x(scaled: 3.71)
+
+Or [`scale`](@ref) will be automatically computed if left out:
 
 ```
 julia> schema((x=collect(1:10), ), Dict(:x => Scale()))
@@ -57,8 +63,8 @@ StatsModels.Schema with 1 entry:
   x => x(scaled: 3.03)
 ```
 """
-struct Scale
-    scale::Any
+struct Scale{T}
+    scale::T
 end
 
 Scale() = Scale(nothing)
@@ -137,8 +143,14 @@ struct ScaledTerm{T,S} <: AbstractTerm
     scale::S
 end
 
-StatsModels.concrete_term(t::Term, xs::AbstractArray, s::Scale) =
-    scale(StatsModels.concrete_term(t, xs, nothing), s)
+function StatsModels.concrete_term(t::Term, xs::AbstractArray, s::Scale{T}) where T <: Union{Number, Nothing}
+    return scale(StatsModels.concrete_term(t, xs, nothing), s)
+end
+
+function StatsModels.concrete_term(t::Term, xs::AbstractArray, s::Scale)
+    s_empirical = Scale(s.scale(xs))
+    return scale(StatsModels.concrete_term(t, xs, nothing), s_empirical)
+end
 
 # run-time constructors:
 scale(t::ContinuousTerm, s::Scale) = ScaledTerm(t, something(s.scale, sqrt(t.var)))
