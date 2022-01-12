@@ -14,6 +14,13 @@
         @test yc isa ScaledTerm
         @test yc.scale == std(data.y)
         @test modelcols(yc, data) == data.y ./ std(data.y) == data.y ./ yc.scale
+
+        @testset "alternative scale function" begin
+            xc = concrete_term(term(:x), data, Scale(mad))
+            @test xc isa ScaledTerm
+            @test xc.scale == mad(data.x)
+            @test modelcols(xc, data) == data.x ./ mad(data.x) == data.x ./ xc.scale
+        end
     end
 
     @testset "Manual scaling" begin
