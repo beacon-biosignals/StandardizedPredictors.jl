@@ -39,7 +39,7 @@ function center!(x, y)
 end
 
 """
-    struct Center{T}
+    struct Center
 
 Represents a centering scheme, akin to `StatsModels.AbstractContrasts`.  Pass as
 value in `Dict` as hints to `schema` (or as `contrasts` kwarg for `fit`).
@@ -68,8 +68,8 @@ StatsModels.Schema with 1 entry:
   x => center(x, 5.5)
 ```
 """
-struct Center{T}
-    center::T
+struct Center
+    center::Any
 end
 
 Center() = Center(nothing)
@@ -147,13 +147,14 @@ struct CenteredTerm{T,C} <: AbstractTerm
     center::C
 end
 
-function StatsModels.concrete_term(t::Term, xs::AbstractArray, c::Center{T}) where T <: Union{Number, Nothing}
-    return center(StatsModels.concrete_term(t, xs, nothing), c)
-end
+Center(xs::AbstractArray, c::Center) = Center(xs, c.center, c)
+# pass through
+Center(::AbstractArray, ::Nothing, parent) = Center(nothing)
+Center(xs::AbstractArray, c, parent) = c(xs)
+Center(::AbstractArray, c::Number, parent) = parent
 
 function StatsModels.concrete_term(t::Term, xs::AbstractArray, c::Center)
-    c_empirical = Center(c.center(xs))
-    return center(StatsModels.concrete_term(t, xs, nothing), c_empirical)
+    return center(StatsModels.concrete_term(t, xs, nothing), Center(xs, c))
 end
 
 # run-time constructors:

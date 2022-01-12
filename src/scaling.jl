@@ -34,7 +34,7 @@ function scale!(x, y)
 end
 
 """
-    struct Scale{T}
+    struct Scale
 
 Represents a scaling scheme, akin to `StatsModels.AbstractContrasts`.  Pass as
 value in `Dict` as hints to `schema` (or as `contrasts` kwarg for `fit`).
@@ -63,8 +63,8 @@ StatsModels.Schema with 1 entry:
   x => x(scaled: 3.03)
 ```
 """
-struct Scale{T}
-    scale::T
+struct Scale
+    scale::Any
 end
 
 Scale() = Scale(nothing)
@@ -136,20 +136,21 @@ StatsModels.Schema with 1 entry:
   x => scale(x, 3.03)
 ```
 
-
 """
 struct ScaledTerm{T,S} <: AbstractTerm
     term::T
     scale::S
 end
 
-function StatsModels.concrete_term(t::Term, xs::AbstractArray, s::Scale{T}) where T <: Union{Number, Nothing}
-    return scale(StatsModels.concrete_term(t, xs, nothing), s)
-end
+
+Scale(xs::AbstractArray, s::Scale) = Scale(xs, s.scale, s)
+# pass through
+Scale(::AbstractArray, ::Nothing, parent) = Scale(nothing)
+Scale(xs::AbstractArray, s, parent) = s(xs)
+Scale(::AbstractArray, s::Number, parent) = parent
 
 function StatsModels.concrete_term(t::Term, xs::AbstractArray, s::Scale)
-    s_empirical = Scale(s.scale(xs))
-    return scale(StatsModels.concrete_term(t, xs, nothing), s_empirical)
+    return scale(StatsModels.concrete_term(t, xs, nothing), Scale(xs, s))
 end
 
 # run-time constructors:
