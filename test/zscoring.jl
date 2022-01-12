@@ -15,6 +15,14 @@
         @test yc.center ≈ mean(data.y)
         @test yc.scale ≈ std(data.y)
         @test modelcols(yc, data) ≈ zscore(data.y) ≈ zscore(data.y, yc.center, yc.scale)
+
+        @testset "alternative center and scale functions" begin
+            xc = concrete_term(term(:x), data, ZScore(median, mad))
+            @test xc isa ZScoredTerm
+            @test xc.center ≈ median(data.x)
+            @test xc.scale ≈ mad(data.x)
+            @test modelcols(xc, data) ≈ zscore(data.x, xc.center, xc.scale)
+        end
     end
 
     @testset "Manual scaling" begin

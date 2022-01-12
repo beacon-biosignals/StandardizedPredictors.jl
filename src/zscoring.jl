@@ -105,8 +105,15 @@ struct ZScoredTerm{T,C,S} <: AbstractTerm
     scale::S
 end
 
-StatsModels.concrete_term(t::Term, xs::AbstractArray, z::ZScore) =
-    zscore(StatsModels.concrete_term(t, xs, nothing), z)
+function ZScore(xs::AbstractArray, zs::ZScore)
+    center = _standard(xs, zs.center)
+    scale = _standard(xs, zs.scale)
+    return ZScore(center, scale)
+end
+
+function StatsModels.concrete_term(t::Term, xs::AbstractArray, z::ZScore)
+    return zscore(StatsModels.concrete_term(t, xs, nothing), ZScore(xs, z))
+end
 
 # run-time constructors:
 StatsBase.zscore(t::ContinuousTerm, z::ZScore) = ZScoredTerm(t, something(z.center, t.mean), something(z.scale, sqrt(t.var)))
