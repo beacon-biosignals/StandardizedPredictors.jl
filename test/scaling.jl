@@ -15,7 +15,8 @@
         @test modelcols(yc, data) == data.y ./ std(data.y) == data.y ./ yc.scale
 
         @testset "alternative scale function" begin
-            f = mad
+            # default normalize will change in a future release of StatsBase
+            f = x -> mad(x; normalize=true)
             xc = concrete_term(term(:x), data, Scale(f))
             @test xc isa ScaledTerm
             @test xc.scale == f(data.x)
