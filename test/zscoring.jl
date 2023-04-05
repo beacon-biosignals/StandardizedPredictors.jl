@@ -16,7 +16,8 @@
         @test modelcols(yc, data) ≈ zscore(data.y) ≈ zscore(data.y, yc.center, yc.scale)
 
         @testset "alternative center and scale functions" begin
-            f, g = first, mad
+            # default normalize will change in a future release of StatsBase
+            f, g = first, x -> mad(x; normalize=true)
             xc = concrete_term(term(:x), data, ZScore(f, g))
             @test xc isa ZScoredTerm
             @test xc.center ≈ f(data.x)
