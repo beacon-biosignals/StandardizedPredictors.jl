@@ -2,7 +2,7 @@
     "access_right": "open",
     "license": "MIT",
     "title": "beacon-biosignals/StandardizedPredictors.jl",
-    "description": "A Julia package for centering, scaling and standardizing predictors",
+    "description": "A Julia package for centering, scaling, and standardizing predictors",
     "upload_type": "software",
     "creators": [
         {
