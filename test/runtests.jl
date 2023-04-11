@@ -9,7 +9,8 @@ string_mime(mime, x) = sprint(show, mime, x)
 
 @testset "StandardizedPredictors.jl" begin
     @testset "Aqua" begin
-        Aqua.test_all(StandardizedPredictors; ambiguities=false)
+        # technically we're pirating StatsBase.zscore(::AbstractTerm)
+        Aqua.test_all(StandardizedPredictors; ambiguities=false, piracy=false)
     end
     include("centering.jl")
     include("scaling.jl")
