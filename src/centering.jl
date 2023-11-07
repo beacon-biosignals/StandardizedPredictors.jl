@@ -22,7 +22,7 @@ center!(f::Function, x) = center!(x, f(skipmissing(x)))
 function center!(x, y)
     try
         y = convert(eltype(x), y)
-        # verify that we also don't hit problems during substraction
+        # verify that we also don't hit problems during subtraction
         # I can't think of any common number type that isn't closed under
         # subtraction, but maybe somebody has created a PositiveInt type
         convert(eltype(x), first(x) - y)

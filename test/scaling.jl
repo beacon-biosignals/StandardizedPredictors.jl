@@ -116,7 +116,7 @@
             dd, nonmissing = StatsModels.missing_omit(d, ff_c)
             # z is ignored:
             @test findall(nonmissing) == [1, 4]
-            # x and y are handled correclty
+            # x and y are handled correctly
             @test dd.x == d.x[nonmissing]
             @test dd.y == d.y[nonmissing]
         end
