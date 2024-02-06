@@ -4,10 +4,11 @@ using StatsModels
 using StatsBase
 using Statistics
 using Test
+using TestSetExtensions
 
 string_mime(mime, x) = sprint(show, mime, x)
 
-@testset "StandardizedPredictors.jl" begin
+@testset ExtendedTestSet "StandardizedPredictors.jl" begin
     @testset "Aqua" begin
         # technically we're pirating StatsBase.zscore(::AbstractTerm)
         Aqua.test_all(StandardizedPredictors; ambiguities=false, piracy=false)
