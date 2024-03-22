@@ -60,7 +60,7 @@ see something rather different:
 
 ```jldoctest centering
 julia> lm(@formula(weight ~ 1 + sex * age), data)
-StatsModels.TableRegressionModel{LinearModel{GLM.LmResp{Vector{Float64}}, GLM.DensePredChol{Float64, LinearAlgebra.CholeskyPivoted{Float64, Matrix{Float64}}}}, Matrix{Float64}}
+StatsModels.TableRegressionModel{LinearModel{GLM.LmResp{Vector{Float64}}, GLM.DensePredChol{Float64, LinearAlgebra.CholeskyPivoted{Float64, Matrix{Float64}, Vector{Int64}}}}, Matrix{Float64}}
 
 weight ~ 1 + sex + age + sex & age
 
@@ -86,9 +86,9 @@ we [`Center`](@ref) age, we get something more meaningful:
 
 ```jldoctest centering
 julia> lm(@formula(weight ~ 1 + sex * age), data; contrasts=Dict(:age => Center()))
-StatsModels.TableRegressionModel{LinearModel{GLM.LmResp{Vector{Float64}}, GLM.DensePredChol{Float64, LinearAlgebra.CholeskyPivoted{Float64, Matrix{Float64}}}}, Matrix{Float64}}
+StatsModels.TableRegressionModel{LinearModel{GLM.LmResp{Vector{Float64}}, GLM.DensePredChol{Float64, LinearAlgebra.CholeskyPivoted{Float64, Matrix{Float64}, Vector{Int64}}}}, Matrix{Float64}}
 
-weight ~ 1 + sex + age + sex & age
+weight ~ 1 + sex + age(centered: 16.5) + sex & age(centered: 16.5)
 
 Coefficients:
 ──────────────────────────────────────────────────────────────────────────────────────────────
@@ -106,9 +106,9 @@ the difference is essentially zero:
 
 ```jldoctest centering
 julia> lm(@formula(weight ~ 1 + sex * age), data; contrasts=Dict(:age => Center(13)))
-StatsModels.TableRegressionModel{LinearModel{GLM.LmResp{Vector{Float64}}, GLM.DensePredChol{Float64, LinearAlgebra.CholeskyPivoted{Float64, Matrix{Float64}}}}, Matrix{Float64}}
+StatsModels.TableRegressionModel{LinearModel{GLM.LmResp{Vector{Float64}}, GLM.DensePredChol{Float64, LinearAlgebra.CholeskyPivoted{Float64, Matrix{Float64}, Vector{Int64}}}}, Matrix{Float64}}
 
-weight ~ 1 + sex + age + sex & age
+weight ~ 1 + sex + age(centered: 13) + sex & age(centered: 13)
 
 Coefficients:
 ────────────────────────────────────────────────────────────────────────────────────────────
