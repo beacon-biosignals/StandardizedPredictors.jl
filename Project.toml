@@ -1,7 +1,7 @@
 name = "StandardizedPredictors"
 uuid = "5064a6a7-f8c2-40e2-8bdc-797ec6f1ae18"
-authors = "Beacon Biosignals, Inc."
 version = "1.0.1"
+authors = "Beacon Biosignals, Inc."
 
 [deps]
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
@@ -14,7 +14,7 @@ Statistics = "1"
 StatsBase = "0.33, 0.34"
 StatsModels = "0.7"
 Test = "1"
-TestSetExtensions = "3"
+TestSetExtensions = "3, 4"
 julia = "1.6"
 
 [extras]
