@@ -16,7 +16,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Check spelling
-        uses: crate-ci/typos@7c572958218557a3272c2d6719629443b5cc26fd # v1.45.2
+        uses: crate-ci/typos@44e2070e6017f834bf069503acb35ca0ca0b75f2 # v1.47.1
         with:
             config: _typos.toml
             write_changes: true
