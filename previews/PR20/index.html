@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Home · StandardizedPredictors.jl</title><link rel="canonical" href="https://beacon-biosignals.github.io/StandardizedPredictors.jl/"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit">StandardizedPredictors.jl</span></div><form class="docs-search" action="search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>Home</a><ul class="internal"><li><a class="tocitem" href="#Centering"><span>Centering</span></a></li></ul></li><li><a class="tocitem" href="api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Home</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Home</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/beacon-biosignals/StandardizedPredictors.jl/blob/master/docs/src/index.md#" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="StandardizedPredictors"><a class="docs-heading-anchor" href="#StandardizedPredictors">StandardizedPredictors</a><a id="StandardizedPredictors-1"></a><a class="docs-heading-anchor-permalink" href="#StandardizedPredictors" title="Permalink"></a></h1><p>This package provides convenient and modular functionality for standardizing regression predictors.  Standardizing predictors can increase numerical stability of some estimation procedures when the predictors are on very different scales or when they are non-orthogonal.  It can also produce more interpretable regression models in the presence of interaction terms.</p><p>The examples below demonstrate the use of StandardizedPredictors.jl with GLM.jl, but they will work with any modeling package that is based on the <a href="https://juliastats.org/StatsModels.jl/stable/formula/">StatsModels.jl formula</a>.</p><h2 id="Centering"><a class="docs-heading-anchor" href="#Centering">Centering</a><a id="Centering-1"></a><a class="docs-heading-anchor-permalink" href="#Centering" title="Permalink"></a></h2><p>Let&#39;s consider a (slightly) synthetic dataset of weights for adolescents of different ages, with predictors <code>age</code> (continuous, from 13 to 20) and <code>sex</code>, and <code>weight</code> in pounds.  The weights are based loosely on the medians from the <a href="https://www.cdc.gov/growthcharts/html_charts/wtage.htm">CDC growth charts</a>, which show that the median male and female both start off around 100 pounds at age 13, but by age 20 the median male weighs around 155 pounds while the median female weighs around 125 pounds.</p><pre><code class="language-julia-repl">julia&gt; using StandardizedPredictors, DataFrames, StatsModels, GLM, StableRNGs
+
+julia&gt; rng = StableRNG(1);
+
+julia&gt; data = DataFrame(age=[13:20; 13:20], 
+                        sex=repeat([&quot;male&quot;, &quot;female&quot;], inner=8),
+                        weight=[range(100, 155; length=8); range(100, 125; length=8)] .+ randn(rng, 16))
+16×3 DataFrame
+ Row │ age    sex     weight
+     │ Int64  String  Float64
+─────┼─────────────────────────
+   1 │    13  male     99.4675
+   2 │    14  male    107.956
+   3 │    15  male    116.467
+   4 │    16  male    122.728
+   5 │    17  male    129.415
+   6 │    18  male    139.016
+   7 │    19  male    148.175
+   8 │    20  male    155.676
+   9 │    13  female  100.082
+  10 │    14  female  103.818
+  11 │    15  female  105.642
+  12 │    16  female  111.043
+  13 │    17  female  112.433
+  14 │    18  female  117.52
+  15 │    19  female  121.464
+  16 │    20  female  125.232</code></pre><p>In this dataset, there&#39;s obviously a main effect of sex: males are heavier than females for every age except 13 years.  But if we run a basic linear regression, we see something rather different:</p><pre><code class="language-julia-repl">julia&gt; lm(@formula(weight ~ 1 + sex * age), data)
+StatsModels.TableRegressionModel{LinearModel{GLM.LmResp{Vector{Float64}}, GLM.DensePredChol{Float64, LinearAlgebra.CholeskyPivoted{Float64, Matrix{Float64}}}}, Matrix{Float64}}
+
+weight ~ 1 + sex + age + sex &amp; age
+
+Coefficients:
+──────────────────────────────────────────────────────────────────────────────
+                     Coef.  Std. Error       t  Pr(&gt;|t|)  Lower 95%  Upper 95%
+──────────────────────────────────────────────────────────────────────────────
+(Intercept)       52.9701     2.5343     20.90    &lt;1e-10   47.4483    58.4918
+sex: male        -56.9962     3.58404   -15.90    &lt;1e-08  -64.8052   -49.1873
+age                3.58693    0.152134   23.58    &lt;1e-10    3.25545    3.9184
+sex: male &amp; age    4.37602    0.21515    20.34    &lt;1e-09    3.90725    4.84479
+──────────────────────────────────────────────────────────────────────────────</code></pre><p>There is a main effect of sex but it goes in the exact opposite direction of what we know to be true, and says that males are 55 pounds <em>lighter</em>.  The reason is that because there&#39;s an interaction between sex and age in this model, the main effect of sex the (extrapolated) difference in weight between sexes when age is 0.</p><p>That&#39;s a non-sensical value, since it&#39;s far outside of our range of ages.  When we <a href="api/#StandardizedPredictors.Center"><code>Center</code></a> age, we get something more meaningful:</p><pre><code class="language-julia-repl">julia&gt; lm(@formula(weight ~ 1 + sex * age), data; contrasts=Dict(:age =&gt; Center()))
+StatsModels.TableRegressionModel{LinearModel{GLM.LmResp{Vector{Float64}}, GLM.DensePredChol{Float64, LinearAlgebra.CholeskyPivoted{Float64, Matrix{Float64}}}}, Matrix{Float64}}
+
+weight ~ 1 + sex + age + sex &amp; age
+
+Coefficients:
+──────────────────────────────────────────────────────────────────────────────────────────────
+                                     Coef.  Std. Error       t  Pr(&gt;|t|)  Lower 95%  Upper 95%
+──────────────────────────────────────────────────────────────────────────────────────────────
+(Intercept)                      112.154      0.348583  321.74    &lt;1e-24  111.395    112.914
+sex: male                         15.2081     0.492971   30.85    &lt;1e-12   14.134     16.2822
+age(centered: 16.5)                3.58693    0.152134   23.58    &lt;1e-10    3.25545    3.9184
+sex: male &amp; age(centered: 16.5)    4.37602    0.21515    20.34    &lt;1e-09    3.90725    4.84479
+──────────────────────────────────────────────────────────────────────────────────────────────</code></pre><p>We can also center age at a different value, like the start of our range where the difference is essentially zero:</p><pre><code class="language-julia-repl">julia&gt; lm(@formula(weight ~ 1 + sex * age), data; contrasts=Dict(:age =&gt; Center(13)))
+StatsModels.TableRegressionModel{LinearModel{GLM.LmResp{Vector{Float64}}, GLM.DensePredChol{Float64, LinearAlgebra.CholeskyPivoted{Float64, Matrix{Float64}}}}, Matrix{Float64}}
+
+weight ~ 1 + sex + age + sex &amp; age
+
+Coefficients:
+────────────────────────────────────────────────────────────────────────────────────────────
+                                   Coef.  Std. Error       t  Pr(&gt;|t|)  Lower 95%  Upper 95%
+────────────────────────────────────────────────────────────────────────────────────────────
+(Intercept)                    99.6001      0.636422  156.50    &lt;1e-20   98.2134   100.987
+sex: male                      -0.107954    0.900037   -0.12    0.9065   -2.06897    1.85306
+age(centered: 13)               3.58693     0.152134   23.58    &lt;1e-10    3.25545    3.9184
+sex: male &amp; age(centered: 13)   4.37602     0.21515    20.34    &lt;1e-09    3.90725    4.84479
+────────────────────────────────────────────────────────────────────────────────────────────</code></pre></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 12 January 2022 19:48">Wednesday 12 January 2022</span>. Using Julia version 1.7.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
