@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>API · StandardizedPredictors.jl</title><link rel="canonical" href="https://beacon-biosignals.github.io/StandardizedPredictors.jl/api/"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit">StandardizedPredictors.jl</span></div><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li class="is-active"><a class="tocitem" href>API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>API</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>API</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/beacon-biosignals/StandardizedPredictors.jl/blob/master/docs/src/api.md#" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="API"><a class="docs-heading-anchor" href="#API">API</a><a id="API-1"></a><a class="docs-heading-anchor-permalink" href="#API" title="Permalink"></a></h1><ul><li><a href="#StandardizedPredictors.Center"><code>StandardizedPredictors.Center</code></a></li><li><a href="#StandardizedPredictors.CenteredTerm"><code>StandardizedPredictors.CenteredTerm</code></a></li><li><a href="#StandardizedPredictors.Scale"><code>StandardizedPredictors.Scale</code></a></li><li><a href="#StandardizedPredictors.ScaledTerm"><code>StandardizedPredictors.ScaledTerm</code></a></li><li><a href="#StandardizedPredictors.ZScore"><code>StandardizedPredictors.ZScore</code></a></li><li><a href="#StandardizedPredictors.ZScoredTerm"><code>StandardizedPredictors.ZScoredTerm</code></a></li><li><a href="#StandardizedPredictors._standard-Tuple{AbstractArray, Number}"><code>StandardizedPredictors._standard</code></a></li><li><a href="#StandardizedPredictors.center-Tuple{Any}"><code>StandardizedPredictors.center</code></a></li><li><a href="#StandardizedPredictors.center!-Tuple{Any}"><code>StandardizedPredictors.center!</code></a></li><li><a href="#StandardizedPredictors.scale-Tuple{Any}"><code>StandardizedPredictors.scale</code></a></li><li><a href="#StandardizedPredictors.scale!-Tuple{Any}"><code>StandardizedPredictors.scale!</code></a></li></ul><article class="docstring"><header><a class="docstring-binding" id="StandardizedPredictors.Center" href="#StandardizedPredictors.Center"><code>StandardizedPredictors.Center</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">struct Center</code></pre><p>Represents a centering scheme, akin to <code>StatsModels.AbstractContrasts</code>.  Pass as value in <code>Dict</code> as hints to <code>schema</code> (or as <code>contrasts</code> kwarg for <code>fit</code>).</p><p><strong>Examples</strong></p><p>Can specify center value to use:</p><pre><code class="language-none">julia&gt; schema((x=collect(1:10), ), Dict(:x =&gt; Center(5)))
+StatsModels.Schema with 1 entry:
+  x =&gt; center(x, 5)</code></pre><p>You can use a function to compute the center value:</p><p>julia&gt; schema((x=collect(1:10), ), Dict(:x =&gt; Center(median))) StatsModels.Schema with 1 entry:   x =&gt; x(centered: 5.5)</p><p>Or <a href="#StandardizedPredictors.center-Tuple{Any}"><code>center</code></a> will be automatically computed if omitted:</p><pre><code class="language-none">julia&gt; schema((x=collect(1:10), ), Dict(:x =&gt; Center()))
+StatsModels.Schema with 1 entry:
+  x =&gt; center(x, 5.5)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/beacon-biosignals/StandardizedPredictors.jl/blob/8f52f692cb01856f4c2111f52ff9703b8e934030/src/centering.jl#L41-L70">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="StandardizedPredictors.CenteredTerm" href="#StandardizedPredictors.CenteredTerm"><code>StandardizedPredictors.CenteredTerm</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">struct CenteredTerm{T,C} &lt;: AbstractTerm</code></pre><p>A lazily centered term.  A wrapper around an <code>T&lt;:AbstractTerm</code> which will produce centered values with <code>modelcols</code> by subtracting <code>center</code> from each element generated by the wrapped term with <code>modelcols</code>.</p><p><strong>Fields</strong></p><ul><li><code>term::T</code>: The wrapped term.</li><li><code>center::C</code>: The center value subtracted from the resulting <code>modelcols</code>.</li></ul><p><strong>Examples</strong></p><p>Directly construct with given center:</p><pre><code class="language-none">julia&gt; d = (x=collect(1:10), );
+
+julia&gt; t = concrete_term(term(:x), d)
+x(continuous)
+
+julia&gt; tc = CenteredTerm(t, 5)
+x(centered: 5)
+
+julia&gt; hcat(modelcols(t + tc, d)...)
+10×2 Matrix{Int64}:
+  1  -4
+  2  -3
+  3  -2
+  4  -1
+  5   0
+  6   1
+  7   2
+  8   3
+  9   4
+ 10   5</code></pre><p>Construct with lazy centering via <a href="#StandardizedPredictors.Center"><code>Center</code></a></p><pre><code class="language-none">julia&gt; tc = concrete_term(term(:x), d, Center())
+center(x, 5.5)
+
+julia&gt; hcat(modelcols(t + tc, d)...)
+10×2 Matrix{Float64}:
+  1.0  -4.5
+  2.0  -3.5
+  3.0  -2.5
+  4.0  -1.5
+  5.0  -0.5
+  6.0   0.5
+  7.0   1.5
+  8.0   2.5
+  9.0   3.5
+ 10.0   4.5</code></pre><p>Or similarly via schema hints:</p><pre><code class="language-none">julia&gt; sch = schema(d, Dict(:x =&gt; Center()))
+StatsModels.Schema with 1 entry:
+  x =&gt; center(x, 5.5)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/beacon-biosignals/StandardizedPredictors.jl/blob/8f52f692cb01856f4c2111f52ff9703b8e934030/src/centering.jl#L78-L145">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="StandardizedPredictors.Scale" href="#StandardizedPredictors.Scale"><code>StandardizedPredictors.Scale</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">struct Scale</code></pre><p>Represents a scaling scheme, akin to <code>StatsModels.AbstractContrasts</code>.  Pass as value in <code>Dict</code> as hints to <code>schema</code> (or as <code>contrasts</code> kwarg for <code>fit</code>).</p><p><strong>Examples</strong></p><p>Can specify scale value to use:</p><pre><code class="language-none">julia&gt; schema((x=collect(1:10), ), Dict(:x =&gt; Scale(5)))
+StatsModels.Schema with 1 entry:
+  x =&gt; x(scaled: 5))</code></pre><p>You can use a function to compute the scale value:</p><p>julia&gt; schema((x=collect(1:10), ), Dict(:x =&gt; Scale(mad))) StatsModels.Schema with 1 entry:   x =&gt; x(scaled: 3.71)</p><p>Or <a href="#StandardizedPredictors.scale-Tuple{Any}"><code>scale</code></a> will be automatically computed if left out:</p><pre><code class="language-none">julia&gt; schema((x=collect(1:10), ), Dict(:x =&gt; Scale()))
+StatsModels.Schema with 1 entry:
+  x =&gt; x(scaled: 3.03)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/beacon-biosignals/StandardizedPredictors.jl/blob/8f52f692cb01856f4c2111f52ff9703b8e934030/src/scaling.jl#L36-L65">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="StandardizedPredictors.ScaledTerm" href="#StandardizedPredictors.ScaledTerm"><code>StandardizedPredictors.ScaledTerm</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">struct ScaledTerm{T,S} &lt;: AbstractTerm</code></pre><p>A lazily scaled term.  A wrapper around an <code>T&lt;:AbstractTerm</code> which will produce scaled values with <code>modelcols</code> by dividing each element by <code>scale</code>.</p><p><strong>Fields</strong></p><ul><li><code>term::T</code>: The wrapped term.</li><li><code>scale::S</code>: The scale value which the resulting <code>modelcols</code> are divided by.</li></ul><p><strong>Examples</strong></p><p>Directly construct with given scale:</p><pre><code class="language-none">julia&gt; d = (x=collect(1:10), );
+
+julia&gt; t = concrete_term(term(:x), d)
+x(continuous)
+
+julia&gt; ts = ScaledTerm(t, 5)
+x(scaled: 5)
+
+julia&gt; hcat(modelcols(t + ts, d)...)
+10×2 Matrix{Float64}:
+  1.0  0.2
+  2.0  0.4
+  3.0  0.6
+  4.0  0.8
+  5.0  1.0
+  6.0  1.2
+  7.0  1.4
+  8.0  1.6
+  9.0  1.8
+ 10.0  2.0</code></pre><p>Construct with lazy scaling via <a href="#StandardizedPredictors.Scale"><code>Scale</code></a></p><pre><code class="language-none">julia&gt; ts = concrete_term(term(:x), d, Scale())
+x(scaled: 3.03)
+
+julia&gt; hcat(modelcols(t + ts, d)...)
+10×2 Matrix{Float64}:
+  1.0  0.330289
+  2.0  0.660578
+  3.0  0.990867
+  4.0  1.32116
+  5.0  1.65145
+  6.0  1.98173
+  7.0  2.31202
+  8.0  2.64231
+  9.0  2.9726
+ 10.0  3.30289</code></pre><p>Or similarly via schema hints:</p><pre><code class="language-none">julia&gt; sch = schema(d, Dict(:x =&gt; Scale()))
+StatsModels.Schema with 1 entry:
+  x =&gt; scale(x, 3.03)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/beacon-biosignals/StandardizedPredictors.jl/blob/8f52f692cb01856f4c2111f52ff9703b8e934030/src/scaling.jl#L73-L139">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="StandardizedPredictors.ZScore" href="#StandardizedPredictors.ZScore"><code>StandardizedPredictors.ZScore</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">struct ZScore</code></pre><p>Represents a z-scoring scheme, akin to <code>StatsModels.AbstractContrasts</code>.  Pass as value in <code>Dict</code> as hints to <code>schema</code> (or as <code>contrasts</code> kwarg for <code>fit</code>).</p><p><strong>Examples</strong></p><p>Can specify the center and scale values to use:</p><pre><code class="language-none">julia&gt; schema((x=collect(1:10), ), Dict(:x =&gt; ZScore(; center=5, scale=3)))
+StatsModels.Schema with 1 entry:
+  x =&gt; x(centered: 5 scaled: 3)</code></pre><p>Or scale will be automatically computed if left out:</p><pre><code class="language-none">julia&gt; schema((x=collect(1:10), ), Dict(:x =&gt; ZScore()))
+StatsModels.Schema with 1 entry:
+  x =&gt; x(centered: 5.5 scaled: 3.03)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/beacon-biosignals/StandardizedPredictors.jl/blob/8f52f692cb01856f4c2111f52ff9703b8e934030/src/zscoring.jl#L1-L24">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="StandardizedPredictors.ZScoredTerm" href="#StandardizedPredictors.ZScoredTerm"><code>StandardizedPredictors.ZScoredTerm</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia">struct ZScoredTerm{T,C,S} &lt;: AbstractTerm</code></pre><p>A lazily z-scored term. A wrapper around an <code>T&lt;:AbstractTerm</code> which will produce scaled values with <code>modelcols</code> by subtracting <code>center</code> from each element and then dividing by <code>scale</code>.</p><p><strong>Fields</strong></p><ul><li><code>term::T</code>: The wrapped term.</li><li><code>center::C</code>: The center value which is subtracted from the resulting <code>modelcols</code>.</li><li><code>scale::S</code>: The scale value which the resulting <code>modelcols</code> are divided by.</li></ul><p><strong>Examples</strong></p><p>Directly construct with given scale:</p><pre><code class="language-none">julia&gt; d = (x=collect(1:10), );
+
+julia&gt; t = concrete_term(term(:x), d)
+x(continuous)
+
+julia&gt; ts = ZScoredTerm(t, 3, 5)
+x(centered: 3 scaled: 5)
+
+julia&gt; hcat(modelcols(t + ts, d)...)
+10×2 Matrix{Float64}:
+  1.0  -0.4
+  2.0  -0.2
+  3.0   0.0
+  4.0   0.2
+  5.0   0.4
+  6.0   0.6
+  7.0   0.8
+  8.0   1.0
+  9.0   1.2
+ 10.0   1.4</code></pre><p>Construct with lazy scaling via <a href="#StandardizedPredictors.ZScore"><code>ZScore</code></a></p><pre><code class="language-none">julia&gt; ts = concrete_term(term(:x), d, ZScore())
+x(centered: 5.5 scaled: 3.03)
+
+julia&gt; hcat(modelcols(t + ts, d)...)
+10×2 Matrix{Float64}:
+  1.0  -1.4863
+  2.0  -1.15601
+  3.0  -0.825723
+  4.0  -0.495434
+  5.0  -0.165145
+  6.0   0.165145
+  7.0   0.495434
+  8.0   0.825723
+  9.0   1.15601
+ 10.0   1.4863</code></pre><p>Or similarly via schema hints:</p><pre><code class="language-none">julia&gt; sch = schema(d, Dict(:x =&gt; ZScore()))
+StatsModels.Schema with 1 entry:
+  x =&gt; x(centered: 5.5 scaled: 3.03)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/beacon-biosignals/StandardizedPredictors.jl/blob/8f52f692cb01856f4c2111f52ff9703b8e934030/src/zscoring.jl#L38-L107">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="StandardizedPredictors._standard-Tuple{AbstractArray, Number}" href="#StandardizedPredictors._standard-Tuple{AbstractArray, Number}"><code>StandardizedPredictors._standard</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">_standard(xs::AbstractArray, val)</code></pre><p>Translate an abstract standardization value to a concrete one based on <code>xs</code>.</p><p><code>nothing</code> and already concrete <code>Number</code> <code>val</code>s are passed through. Otherwise, <code>val(xs)</code> is returned.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/beacon-biosignals/StandardizedPredictors.jl/blob/8f52f692cb01856f4c2111f52ff9703b8e934030/src/StandardizedPredictors.jl#L21-L28">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="StandardizedPredictors.center!-Tuple{Any}" href="#StandardizedPredictors.center!-Tuple{Any}"><code>StandardizedPredictors.center!</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">center!(f=mean, x, y=f(skipmissing(x)))</code></pre><p>Center an array <code>x</code> in place about a scalar <code>y</code>.</p><p>See also <a href="#StandardizedPredictors.center-Tuple{Any}"><code>center</code></a></p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/beacon-biosignals/StandardizedPredictors.jl/blob/8f52f692cb01856f4c2111f52ff9703b8e934030/src/centering.jl#L12-L18">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="StandardizedPredictors.center-Tuple{Any}" href="#StandardizedPredictors.center-Tuple{Any}"><code>StandardizedPredictors.center</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">center(f=mean, x, y=f(skipmissing(x)))</code></pre><p>Center an array <code>x</code> about a scalar <code>y</code>.</p><p>See also <a href="#StandardizedPredictors.center!-Tuple{Any}"><code>center!</code></a></p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/beacon-biosignals/StandardizedPredictors.jl/blob/8f52f692cb01856f4c2111f52ff9703b8e934030/src/centering.jl#L1-L7">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="StandardizedPredictors.scale!-Tuple{Any}" href="#StandardizedPredictors.scale!-Tuple{Any}"><code>StandardizedPredictors.scale!</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">scale(f=std, x, y=f(skipmissing(x)))</code></pre><p>Scale an array <code>x</code> in place by a scalar <code>y</code>.</p><div class="admonition is-warning"><header class="admonition-header">Warning</header><div class="admonition-body"><p>This only scales and does not center the values, unlike <code>scale</code> in R. See <code>StatsBase.zscore</code> for that functionality.</p></div></div><p>See also <a href="#StandardizedPredictors.scale-Tuple{Any}"><code>scale</code></a></p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/beacon-biosignals/StandardizedPredictors.jl/blob/8f52f692cb01856f4c2111f52ff9703b8e934030/src/scaling.jl#L17-L27">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="StandardizedPredictors.scale-Tuple{Any}" href="#StandardizedPredictors.scale-Tuple{Any}"><code>StandardizedPredictors.scale</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia">scale(f=std, x, y=f(skipmissing(x)))</code></pre><p>Scale an array <code>x</code> by a scalar <code>y</code>.</p><div class="admonition is-warning"><header class="admonition-header">Warning</header><div class="admonition-body"><p>This only scales and does not center the values, unlike <code>scale</code> in R. See <code>StatsBase.zscore</code> for that functionality.</p></div></div><p>See also <a href="#StandardizedPredictors.scale!-Tuple{Any}"><code>scale!</code></a></p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/beacon-biosignals/StandardizedPredictors.jl/blob/8f52f692cb01856f4c2111f52ff9703b8e934030/src/scaling.jl#L1-L12">source</a></section></article></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 12 January 2022 22:25">Wednesday 12 January 2022</span>. Using Julia version 1.7.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
